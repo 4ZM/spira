@@ -1,13 +1,10 @@
-# spira
+# Spira
 
-A Clojure library designed to ... well, that part is up to you.
+En trädgårdsplanerare för amatörodlare
 
-## Usage
+## Licens
 
-FIXME
+Copyright (C) 2013 Anders Sundman <anders@4zm.org>
 
-## License
-
-Copyright © 2013 FIXME
-
-Distributed under the Eclipse Public License, the same as Clojure.
+Spira är fri mjukvara och kan distribueras i enlighet med villkoren i
+GPL Gnu Public License version 3.
