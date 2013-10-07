@@ -16,6 +16,7 @@
 (ns spira.dm.species)
 
 ;; Entity object representing a species of plant
+;; TODO Indentation of defcrecords?
 (defrecord PlantSpecies
     [
      name ; Common name
@@ -28,8 +29,10 @@
   (clojure.string/replace  (str name "-" kind) \space \_))
 
 ;; PlantSpecis Repository
-(ns spira.dm.seed-catalog [:use spira.dm.species])
-(defn all-species
-  "Get a seq of all the plant species"
-  []
-  nil)
+
+;; TODO Should I keep the "-species" suffix
+(defprotocol SpeciesRepo
+  "Repository of PlantSpecies. For reading, writing and searching."
+  (list-species [repo] "A seq of all species.")
+  (get-species [repo name] [repo name kind] "Get a species or a list if several match the name.")
+  (add-species [repo species] "Add a new species to the repository."))

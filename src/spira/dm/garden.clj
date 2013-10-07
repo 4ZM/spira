@@ -15,11 +15,7 @@
 
 (ns spira.dm.garden)
 
-(defrecord Garden
-    [
-     name
-     seedings
-     ])
+(defrecord Garden [name seedings])
 
 ;; Get an unique id for a garden
 (defn id [{name :name}]
@@ -30,8 +26,8 @@
   (Garden. name {}))
 
 ;; Garden Repository
-(ns spira.dm.garden-repo [:use spira.dm.garden])
-(defn get-garden
-  "Get the garden with the specified name or nil if no such garden exists."
-  [name]
-  nil)
+(defprotocol GardenRepo
+  "Repository of Gardens. For reading, writing and searching."
+  (list-gardens [repo] "A seq of all gardens.")
+  (get-garden [repo name] "Get a specific garden.")
+  (add-garden [repo garden] "Add a new garden to the repository."))

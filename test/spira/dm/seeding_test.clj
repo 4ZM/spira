@@ -22,7 +22,7 @@
   (:use spira.dm.seeding))
  
 (def carrot (util/create-test-plant "Carrot" "Early Nantes"))
-(def corn-ashworth (util/create-test-plant "Corn" "Ashworth"))
+(def corn (util/create-test-plant "Corn" "Ashworth"))
 
 (deftest seeding-creation
   (testing "Test seeding creation"

@@ -17,7 +17,8 @@
   (:require [spira.dm.garden :as garden]
             [spira.dm.species :as species]
             [spira.dm.seeding :as seeding]
-            [spira.dm.test-util :as util])
+            [spira.dm.test-util :as test-util]
+            [spira.util :as util])
   
   (:import [spira.dm.species PlantSpecies])
   (:import [spira.dm.garden Garden])
@@ -26,14 +27,43 @@
 ;; This class creates and populates a small domain model that can be
 ;; used in unit tests.
 
-;; Plants
-(def carrot-early-nantes (util/create-test-plant "Carrot" "Early Nantes"))
-(def carrot-amsterdam (util/create-test-plant "Carrot" "Amsterdam"))
-(def corn-ashworth (util/create-test-plant "Corn" "Ashworth"))
+;; Garden repo
+(def gardens (atom '()))
+(deftype InMemoryGardenRepo []
+  garden/GardenRepo
+  (list-gardens [this] @gardens)
+  (get-garden [this name]
+    (util/find-first #(= name (:name %)) (.list-gardens this)))
+  (add-garden [this g] (swap! gardens conj g)))
 
-;; Gardens
-(def babylon (garden/create-garden "babylon"))
-(def luxor (garden/create-garden "luxor"))
+(defn- create-test-garden []
+  (let [garden-repo (InMemoryGardenRepo.)]
+    (.add-garden garden-repo (garden/create-garden "Babylon"))
+    (.add-garden garden-repo (garden/create-garden "Luxor"))
+    garden-repo))
+(def test-garden-repo (create-test-garden))
 
 ;; Add seedings
 (def seeding-1 (seeding/create-seeding (:id babylon)))
+
+
+;; Species repo
+(def species (atom '()))
+(deftype InMemorySpeciesRepo []
+  species/SpeciesRepo
+  (list-species [this] @species)
+  (get-species [this name]
+    (filter #(= name (:name %)) @species))
+  (get-species [this name kind]
+    (filter #(= kind (:kind-name %)) (.get-species this name)))
+  (add-species [this s] (swap! species conj s)))
+
+(defn- create-test-species []
+  (let [species-repo (InMemorySpeciesRepo.)]
+    (.add-species species-repo (test-util/create-test-plant "Carrot" "Early Nantes"))
+    (.add-species species-repo (test-util/create-test-plant "Carrot" "Amsterdam"))
+    (.add-species species-repo (test-util/create-test-plant "Corn" "Ashworth"))
+    species-repo))
+(def test-species-repo (create-test-species))
+
+
