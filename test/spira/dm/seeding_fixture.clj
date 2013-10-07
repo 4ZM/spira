@@ -13,7 +13,7 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-(ns spira.dm.seeding-test
+(ns spira.dm.seeding-fixture
   (:require [clojure.test :refer :all]
             [spira.dm.test-util :as util]
             [spira.dm.garden :as garden]

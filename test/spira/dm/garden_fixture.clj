@@ -13,7 +13,7 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-(ns spira.dm.garden-test
+(ns spira.dm.garden-fixtures
   (:require [clojure.test :refer :all]
             [spira.dm.garden :refer :all]))
 
