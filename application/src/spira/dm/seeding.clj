@@ -14,7 +14,7 @@
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 (ns spira.dm.seeding
-  [:require [spira.util :as util]])
+  [:require [spira.core.util :as util]])
 
 ;; A seeding is a plant or a collection of plats treated as a unit
 ;; in the calendar context.

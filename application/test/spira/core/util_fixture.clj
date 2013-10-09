@@ -13,12 +13,22 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-(ns spira.util)
+(ns spira.core.util-fixture
+  (:require [clojure.test :refer :all]
+            [spira.core.util :refer :all]))
 
-(defn uuid []
-  "Create a GUID string."
-  (str (java.util.UUID/randomUUID)))
+(deftest test-unique-uuid
+  (testing "The uuid should return new values on each call."
+    (is (not (= (uuid) (uuid))))
+    ))
 
-(defn find-first [f coll]
-  "Get first item in a seq matching a predicate."
-  (first (filter f coll)))
+(deftest test-find-first-empty-seq
+  (is (= nil (find-first even? '()))))
+
+(deftest test-find-first-no-match
+  (is (= nil (find-first even? '(1 3 5 7)))))
+
+(deftest test-find-first-match-found
+  (is (= 2 (find-first even? '(2 3 5 7))))
+  (is (= 4 (find-first even? '(1 4 5 7))))
+  (is (= 8 (find-first even? '(1 3 5 8)))))

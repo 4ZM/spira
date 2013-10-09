@@ -18,7 +18,7 @@
             [spira.dm.species :as species]
             [spira.dm.seeding :as seeding]
             [spira.dm.test-util :as test-util]
-            [spira.util :as util])
+            [spira.core.util :as util])
   
   (:import [spira.dm.species PlantSpecies])
   (:import [spira.dm.garden Garden])
@@ -44,7 +44,7 @@
 (def test-garden-repo (create-test-garden))
 
 ;; Add seedings
-(def seeding-1 (seeding/create-seeding (:id babylon)))
+;;(def seeding-1 (seeding/create-seeding (:id babylon)))
 
 
 ;; Species repo
