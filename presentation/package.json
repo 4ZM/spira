@@ -1,0 +1,17 @@
+{
+  "name": "spira",
+  "description": "En trädgårdsplanerare för amatörodlare",
+  "repository" : 
+  {
+    "type" : "git",
+    "url" : "https://github.com/4ZM/spira"
+  },
+  "devDependencies" :
+  {
+    "phantomjs" : "*",
+    "karma" : "*",
+    "karma-junit-reporter" : "*",    
+    "karma-jasmine" : "*",
+    "karma-ng-scenario" : "*"
+  }
+}
