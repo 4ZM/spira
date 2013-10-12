@@ -6,7 +6,7 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         jshint: {
-            files: ['Gruntfile.js', 'presentation/app/js/*.js'],
+            files: ['Gruntfile.js', '<%= pkg.directories.webapp %>/js/*.js'],
             options:{
                 globalstrict: true,
                 globals:{
@@ -57,7 +57,7 @@ module.exports = function(grunt) {
             release: {
                 files: [
                     { expand: true,
-                      cwd: 'presentation/app/',
+                      cwd: '<%= pkg.directories.webapp %>/',
                       src: ['**/*.html'],
                       dest: '<%= pkg.directories.release %>'
                     },
@@ -65,7 +65,7 @@ module.exports = function(grunt) {
             }
         },
         useminPrepare: {
-            html: ['presentation/app/index.html'],
+            html: ['<%= pkg.directories.webapp %>/index.html'],
             options: {
                 dest: '<%= pkg.directories.release %>'
             }

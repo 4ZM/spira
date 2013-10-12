@@ -4,7 +4,8 @@
   "description": "Garden planner",
   "main": "Gruntfile.js",
   "directories": {
-    "release": "release"
+    "release": "release",
+    "webapp": "presentation/app"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
