@@ -10,7 +10,7 @@ module.exports = function(config){
 
     autoWatch : false,
 
-    browsers : ['Firefox'],
+    browsers : ['Firefox', 'PhantomJS'],
 
     frameworks: ['ng-scenario'],
 
@@ -24,6 +24,7 @@ module.exports = function(config){
             'karma-junit-reporter',
             'karma-chrome-launcher',
             'karma-firefox-launcher',
+            'karma-phantomjs-launcher',
             'karma-jasmine',
             'karma-ng-scenario'    
             ],

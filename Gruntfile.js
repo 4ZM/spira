@@ -16,17 +16,17 @@ module.exports = function(grunt) {
             },
         },
 
-        // karma: {
-        //     unit: {
-        //         configFile: 'config/karma.conf.js',
-        //     },
+        karma: {
+            unit: {
+                configFile: 'presentation/config/karma.conf.js',
+            },
 
-        //     continuous: {
-        //         configFile: 'config/karma.conf.js',
-        //         singleRun: true,
-        //         browsers: ['PhantomJS']
-        //     },
-        // },
+            continuous: {
+                configFile: 'presentation/config/karma.conf.js',
+                singleRun: true,
+                browsers: ['PhantomJS']
+            },
+        },
 
         // shell: {                                // Task
         //     listFolders: {                      // Target
@@ -83,7 +83,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-contrib-jshint');
-    // grunt.loadNpmTasks('grunt-karma');
+    grunt.loadNpmTasks('grunt-karma');
     // grunt.loadNpmTasks('grunt-shell');
     grunt.loadNpmTasks('grunt-bower-task');
     grunt.loadNpmTasks('grunt-usemin');
