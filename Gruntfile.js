@@ -19,23 +19,22 @@ module.exports = function(grunt) {
         karma: {
             unit: {
                 configFile: 'presentation/config/karma.conf.js',
-            },
-
-            continuous: {
-                configFile: 'presentation/config/karma.conf.js',
                 singleRun: true,
                 browsers: ['PhantomJS']
             },
         },
 
-        // shell: {                                // Task
-        //     listFolders: {                      // Target
-        //         options: {                      // Options
-        //             stdout: true
-        //         },
-        //         command: 'ls'
-        //     }
-        // },
+        shell: {
+            leintest: {
+                command: 'lein difftest',
+                options: {
+                    stdout: true,
+                    execOptions: {
+                        cwd: 'application'
+                    }
+                }
+            }
+        },
 
         bower: {
             install: {
@@ -85,12 +84,13 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-karma');
-    // grunt.loadNpmTasks('grunt-shell');
+    grunt.loadNpmTasks('grunt-shell');
     grunt.loadNpmTasks('grunt-bower-task');
     grunt.loadNpmTasks('grunt-usemin');
     
     // Default task(s).
     grunt.registerTask('default', ['jshint']);
+    grunt.registerTask('test', ['shell:leintest', 'karma:unit']);
 
     grunt.registerTask('deploy', ['clean', 'copy', 'useminPrepare', 'concat', 'uglify', 'usemin']);
     //grunt.registerTask('foo', ['concat', 'jshint']);

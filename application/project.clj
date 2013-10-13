@@ -7,5 +7,6 @@
                  [compojure "1.1.1"]
                  [cheshire "4.0.0"]
                  [hiccup "1.0.0"]]
-  :plugins [[lein-ring "0.7.1"]]
-  :ring {:handler spira.service.routes/app})
+  :plugins [[lein-ring "0.7.1"], [lein-difftest "2.0.0"]]
+  :ring {:handler spira.service.routes/app}
+)
