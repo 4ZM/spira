@@ -51,7 +51,8 @@ module.exports = function(grunt) {
         },
 
         clean: {
-            release: ['<%= pkg.directories.release %>']
+            release: ['<%= pkg.directories.release %>'],
+            tmp: ['**/#*#', '**/*~']
         },
         copy: {
             release: {
