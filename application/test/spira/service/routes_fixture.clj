@@ -19,12 +19,13 @@
             [spira.service.routes :refer :all]))
 
 (def http-req-ok 200)
+(def http-req-bad 400)
 (def http-req-not-found 404)
 
-(defn test-req [uri]
+(defn test-req [uri & params]
   {:request-method :get
    :uri uri :headers []
-   :params []})
+   :params (first params)})
 
 (deftest test-not-found
   (testing "Testing a non existant route"
@@ -34,5 +35,5 @@
 (deftest test-gardens
   (testing "Testing the /api/gardens route"
     (is (= http-req-ok (:status (app-routes (test-req "/api/gardens")))))
+    (is (= http-req-bad (:status (app-routes (test-req "/api/gardens" {:id "eden"})))))
     ))
-

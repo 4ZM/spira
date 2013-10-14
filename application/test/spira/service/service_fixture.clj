@@ -24,3 +24,10 @@
   (with-redefs [garden-repo test-garden-repo]
     (is (some #(= % "Luxor") (map :name (req-gardens))))
     ))
+
+(deftest test-garden-req
+  (testing "Testing response to the gardens grequest")
+  (with-redefs [garden-repo test-garden-repo]
+    (is (= "Luxor" (:name (req-gardens "Luxor"))))
+    (is (= :bad-req (req-gardens "NoSuchGarden")))
+    ))

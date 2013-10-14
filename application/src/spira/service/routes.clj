@@ -14,9 +14,9 @@
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 (ns spira.service.routes
-  (:require [hiccup.middleware :refer [wrap-base-url]]
-   [spira.service.service :as service]
+  (:require [spira.service.service :as service]
    [spira.service.views :refer :all]
+   [ring.middleware.params :refer [wrap-params]]
    [cheshire.core :as json]
    [compojure.core :refer :all]
    [compojure.route :as route]
@@ -24,18 +24,15 @@
    [compojure.response :as response]))
 
 (defn json-response [data & [status]]
-  {:status (or status 200)
-   :headers {"Content-Type" "application/json"}
-      :body (json/generate-string data)})
+  (let [status (or status (if (= data :bad-req) 400) 200)]
+   {:status status
+    :headers {"Content-Type" "application/json"}
+    :body (if (= status 200) (json/generate-string data))}))
 
 (defroutes app-routes
-  (GET "/" [] (index-page))
-  (GET "/api/gardens" [] (json-response (service/req-gardens)))
-  (route/resources "/")
-  (route/not-found (not-found-page)))
+  (GET "/api/gardens" [id] (let [r (if (nil? id) (service/req-gardens) (service/req-gardens id))]  (json-response r))) 
+  (route/not-found "Page not found"))
 
 (def app
   (-> (handler/site app-routes)
-;;      (wrap-params)
-;;      (wrap-content-type)
-      (wrap-base-url)))
+      wrap-params))

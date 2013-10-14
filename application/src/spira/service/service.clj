@@ -32,6 +32,9 @@
   (add-garden [this g] nil))
 (def garden-repo (NopGardenRepo.))
 
-(defn req-gardens []
+(defn req-gardens
   "Respond to /gardens request"
-  (map (fn [g] {:name (.name g)}) (.list-gardens garden-repo)))
+  ([] (map (fn [g] {:name (.name g)}) (.list-gardens garden-repo)))
+  ([id] (let [g (.get-garden garden-repo id)]
+          (if (nil? g) :bad-req {:name (.name g)})
+            )))
