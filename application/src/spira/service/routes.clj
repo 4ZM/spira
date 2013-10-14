@@ -14,12 +14,11 @@
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 (ns spira.service.routes
-  (:use
-   [compojure.core]
-   [spira.service.views]
-   [hiccup.middleware :only (wrap-base-url)])
-  (:require
+  (:require [hiccup.middleware :refer [wrap-base-url]]
+   [spira.service.service :as service]
+   [spira.service.views :refer :all]
    [cheshire.core :as json]
+   [compojure.core :refer :all]
    [compojure.route :as route]
    [compojure.handler :as handler]
    [compojure.response :as response]))
@@ -31,7 +30,7 @@
 
 (defroutes app-routes
   (GET "/" [] (index-page))
-  (GET "/api/fu" [arg] (json-response {:wicked arg :kickass "ehh"}))
+  (GET "/api/gardens" [] (json-response (service/req-gardens)))
   (route/resources "/")
   (route/not-found (not-found-page)))
 

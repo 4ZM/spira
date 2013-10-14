@@ -13,26 +13,25 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-(ns spira.service.routes-fixture
-  (:require [clojure.test :refer :all]
+(ns spira.service.service
+  (:require [compojure.core :refer :all]
+            [spira.dm.garden :as garden]
             [spira.dm.test-model :refer :all]
-            [spira.service.routes :refer :all]))
+            [spira.service.views :refer :all]
+            [hiccup.middleware :refer [wrap-base-url]]
+            [cheshire.core :as json]
+            [compojure.route :as route]
+            [compojure.handler :as handler]
+            [compojure.response :as response]))
 
-(def http-req-ok 200)
-(def http-req-not-found 404)
+;; Change set this to a propper repo
+(deftype NopGardenRepo []
+  garden/GardenRepo
+  (list-gardens [this] nil)
+  (get-garden [this name] nil)
+  (add-garden [this g] nil))
+(def garden-repo (NopGardenRepo.))
 
-(defn test-req [uri]
-  {:request-method :get
-   :uri uri :headers []
-   :params []})
-
-(deftest test-not-found
-  (testing "Testing a non existant route"
-    (is (= http-req-not-found (:status (app-routes (test-req "/this/is/not/a/valid/route")))))
-    ))
-
-(deftest test-gardens
-  (testing "Testing the /api/gardens route"
-    (is (= http-req-ok (:status (app-routes (test-req "/api/gardens")))))
-    ))
-
+(defn req-gardens []
+  "Respond to /gardens request"
+  (map (fn [g] {:name (.name g)}) (.list-gardens garden-repo)))

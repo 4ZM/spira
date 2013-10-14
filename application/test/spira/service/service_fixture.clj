@@ -13,26 +13,14 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-(ns spira.service.routes-fixture
+(ns spira.service.service-fixture
   (:require [clojure.test :refer :all]
+            [spira.service.service :refer :all]
             [spira.dm.test-model :refer :all]
-            [spira.service.routes :refer :all]))
-
-(def http-req-ok 200)
-(def http-req-not-found 404)
-
-(defn test-req [uri]
-  {:request-method :get
-   :uri uri :headers []
-   :params []})
-
-(deftest test-not-found
-  (testing "Testing a non existant route"
-    (is (= http-req-not-found (:status (app-routes (test-req "/this/is/not/a/valid/route")))))
-    ))
+            ))
 
 (deftest test-gardens
-  (testing "Testing the /api/gardens route"
-    (is (= http-req-ok (:status (app-routes (test-req "/api/gardens")))))
+  (testing "Testing response to the gardens grequest")
+  (with-redefs [garden-repo test-garden-repo]
+    (is (some #(= % "Luxor") (map :name (req-gardens))))
     ))
-

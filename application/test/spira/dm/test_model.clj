@@ -36,12 +36,12 @@
     (util/find-first #(= name (:name %)) (.list-gardens this)))
   (add-garden [this g] (swap! gardens conj g)))
 
-(defn- create-test-garden []
+(defn- create-test-gardens []
   (let [garden-repo (InMemoryGardenRepo.)]
     (.add-garden garden-repo (garden/create-garden "Babylon"))
     (.add-garden garden-repo (garden/create-garden "Luxor"))
     garden-repo))
-(def test-garden-repo (create-test-garden))
+(def test-garden-repo (create-test-gardens))
 
 ;; Add seedings
 ;;(def seeding-1 (seeding/create-seeding (:id babylon)))
