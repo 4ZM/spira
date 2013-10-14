@@ -75,7 +75,7 @@ module.exports = function(grunt) {
             html: ['<%= pkg.directories.release %>/index.html'],
         }
     });
-    
+
     // Load the plugin that provides the "uglify" task.
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
@@ -88,11 +88,19 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-shell');
     grunt.loadNpmTasks('grunt-bower-task');
     grunt.loadNpmTasks('grunt-usemin');
-    
-    // Default task(s).
-    grunt.registerTask('default', ['jshint']);
+
+    // Default is prep
+    grunt.registerTask('default', ['clean', 'test', 'lint']);
+
+    // Check code
+    grunt.registerTask('lint', ['jshint']);
+
+    // Run unit tests
     grunt.registerTask('test', ['shell:leintest', 'karma:unit']);
 
+    // Run before checkin - lint and test
+    grunt.registerTask('prep', ['clean', 'test', 'lint']);
+
+    // State deployment area
     grunt.registerTask('deploy', ['clean', 'copy', 'useminPrepare', 'concat', 'uglify', 'usemin']);
-    //grunt.registerTask('foo', ['concat', 'jshint']);
 };
