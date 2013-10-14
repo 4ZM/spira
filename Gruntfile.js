@@ -29,6 +29,7 @@ module.exports = function(grunt) {
                 command: 'lein difftest',
                 options: {
                     stdout: true,
+                    stderr: true,
                     execOptions: {
                         cwd: 'application'
                     }
