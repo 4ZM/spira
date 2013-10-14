@@ -13,10 +13,10 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-(ns spira.webapp.routes
+(ns spira.service.routes
   (:use
    [compojure.core]
-   [spira.webapp.views]
+   [spira.service.views]
    [hiccup.middleware :only (wrap-base-url)])
   (:require
    [cheshire.core :as json]
