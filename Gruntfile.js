@@ -4,9 +4,15 @@ module.exports = function(grunt) {
 
     // Project configuration.
     grunt.initConfig({
+        distdir: "release",
+        clientdir: "client",
+        serverdir: "server",
+        appdir: "<%= clientdir %>/app",
+
         pkg: grunt.file.readJSON('package.json'),
+
         jshint: {
-            files: ['Gruntfile.js', '<%= pkg.directories.webapp %>/js/*.js'],
+            files: ['Gruntfile.js', '<%= appdir %>/js/*.js'],
             options:{
                 globalstrict: true,
                 globals:{
@@ -18,7 +24,7 @@ module.exports = function(grunt) {
 
         karma: {
             unit: {
-                configFile: 'client/config/karma.conf.js',
+                configFile: '<%= clientdir %>/config/karma.conf.js',
                 singleRun: true,
                 browsers: ['PhantomJS']
             },
@@ -31,7 +37,7 @@ module.exports = function(grunt) {
                     stdout: true,
                     stderr: true,
                     execOptions: {
-                        cwd: 'server'
+                        cwd: '<%= serverdir %>'
                     }
                 }
             }
@@ -40,7 +46,7 @@ module.exports = function(grunt) {
         bower: {
             install: {
                 options: {
-                    targetDir: 'client/app/lib',
+                    targetDir: '<%= appdir %>/lib',
                     layout: 'byComponent',
                     install: true,
                     verbose: false,
@@ -51,28 +57,28 @@ module.exports = function(grunt) {
         },
 
         clean: {
-            release: ['<%= pkg.directories.release %>'],
+            release: ['<%= distdir %>'],
             tmp: ['**/#*#', '**/*~']
         },
         copy: {
             release: {
                 files: [
                     { expand: true,
-                      cwd: '<%= pkg.directories.webapp %>/',
+                      cwd: '<%= appdir %>/',
                       src: ['**/*.html'],
-                      dest: '<%= pkg.directories.release %>'
+                      dest: '<%= distdir %>'
                     },
                 ]
             }
         },
         useminPrepare: {
-            html: ['<%= pkg.directories.webapp %>/index.html'],
+            html: ['<%= appdir %>/index.html'],
             options: {
-                dest: '<%= pkg.directories.release %>'
+                dest: '<%= distdir %>'
             }
         },
         usemin: {
-            html: ['<%= pkg.directories.release %>/index.html'],
+            html: ['<%= distdir %>/index.html'],
         }
     });
 

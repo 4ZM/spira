@@ -3,10 +3,6 @@
   "version": "0.1.0",
   "description": "Garden planner",
   "main": "Gruntfile.js",
-  "directories": {
-    "release": "release",
-    "webapp": "client/app"
-  },
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-bower-task": "~0.3.2",
