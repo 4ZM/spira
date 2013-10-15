@@ -6,8 +6,13 @@
 
     <title>Spira</title>
 
+    <!-- build:css css/lib.css -->
     <link href="lib/bootstrap/bootstrap.css" rel="stylesheet">
+    <!-- endbuild -->
+    <!-- build:css css/app.css -->
     <link href="css/app.css" rel="stylesheet">
+    <!-- endbuild -->
+
   </head>
 
   <body>
@@ -33,10 +38,9 @@
 
     <div ng-view></div>
 
+    <!-- build:js js/libs.js -->
     <script src="lib/jquery/jquery.js"></script>
     <script src="lib/bootstrap/bootstrap.js"></script>
-
-    <!-- build:js js/libs.js -->
     <script src="lib/angular/angular.js"></script>
     <!-- endbuild -->
     <!-- build:js js/app.js -->

@@ -2,11 +2,11 @@
 
 /* Controllers */
 
-angular.module('spira.controllers', []).
-  controller('homeCtrl', [function() {
+angular.module('spira.controllers', [])
+  .controller('homeCtrl', [function() {
 
   }])
-  controller('catalogCtrl', [function() {
+  .controller('catalogCtrl', [function() {
 
   }])
   .controller('plannerCtrl', [function() {
