@@ -18,7 +18,7 @@ module.exports = function(grunt) {
 
         karma: {
             unit: {
-                configFile: 'presentation/config/karma.conf.js',
+                configFile: 'client/config/karma.conf.js',
                 singleRun: true,
                 browsers: ['PhantomJS']
             },
@@ -31,7 +31,7 @@ module.exports = function(grunt) {
                     stdout: true,
                     stderr: true,
                     execOptions: {
-                        cwd: 'application'
+                        cwd: 'server'
                     }
                 }
             }
@@ -40,7 +40,7 @@ module.exports = function(grunt) {
         bower: {
             install: {
                 options: {
-                    targetDir: 'presentation/app/lib',
+                    targetDir: 'client/app/lib',
                     layout: 'byComponent',
                     install: true,
                     verbose: false,
