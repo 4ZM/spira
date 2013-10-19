@@ -5,9 +5,8 @@ module.exports = function(grunt) {
     // Project configuration.
     grunt.initConfig({
         distdir: "release",
-        clientdir: "client",
-        serverdir: "server",
-        appdir: "<%= clientdir %>/app",
+        testdir: "test",
+        appdir: "app",
 
         pkg: grunt.file.readJSON('package.json'),
 
@@ -24,23 +23,10 @@ module.exports = function(grunt) {
 
         karma: {
             unit: {
-                configFile: '<%= clientdir %>/config/karma.conf.js',
+                configFile: '<%= testdir %>/config/karma.conf.js',
                 singleRun: true,
                 browsers: ['PhantomJS']
             },
-        },
-
-        shell: {
-            leintest: {
-                command: 'lein difftest',
-                options: {
-                    stdout: true,
-                    stderr: true,
-                    execOptions: {
-                        cwd: '<%= serverdir %>'
-                    }
-                }
-            }
         },
 
         bower: {
@@ -102,7 +88,7 @@ module.exports = function(grunt) {
     grunt.registerTask('lint', ['jshint']);
 
     // Run unit tests
-    grunt.registerTask('test', ['shell:leintest', 'karma:unit']);
+    grunt.registerTask('test', ['karma:unit']);
 
     // Run before checkin - lint and test
     grunt.registerTask('prep', ['clean', 'test', 'lint']);

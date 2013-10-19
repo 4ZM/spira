@@ -1,8 +1,10 @@
+'use strict';
+
 module.exports = function(config){
     config.set({
 
 
-    basePath : '../',
+    basePath : '../../',
 
     files : [
         'test/e2e/**/*.js'

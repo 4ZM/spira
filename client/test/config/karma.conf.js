@@ -1,6 +1,8 @@
+'use strict';
+
 module.exports = function(config){
     config.set({
-        basePath : '../',
+        basePath : '../../',
 
         files : [
             'app/lib/angular/angular.js',
