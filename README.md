@@ -12,8 +12,5 @@ Kör sedan npm install för att installera övriga beroenden lokalt.
 Copyright (C) 2013 Anders Sundman <anders@4zm.org>
 
 Spira är fri mjukvara och kan distribueras i enlighet med villkoren i
-GPL Gnu Public License version 3.
-
-
-
+GPL Affero General Public License version 3.
 

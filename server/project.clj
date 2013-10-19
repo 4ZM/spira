@@ -1,8 +1,8 @@
 (defproject spira "0.1.0-SNAPSHOT"
   :description "Trädgårdsplanerare för amatörodlare"
   :url "https://github.com/4ZM/spira"
-  :license {:name "GNU General Public License (GPLv3)"
-            :url "http://www.gnu.org/licenses/gpl.html"}
+  :license {:name "GNU Affero General Public License (AGPLv3)"
+            :url "http://www.gnu.org/licenses/agpl.html"}
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [compojure "1.1.1"]
                  [cheshire "4.0.0"]

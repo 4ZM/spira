@@ -30,7 +30,7 @@
     "url": "https://github.com/4ZM/spira.git"
   },
   "author": "Anders Sundman <anders@4zm.org>",
-  "license": "GPLv3",
+  "license": "AGPLv3",
   "bugs": {
     "url": "https://github.com/4ZM/spira/issues"
   }

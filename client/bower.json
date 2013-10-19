@@ -6,7 +6,7 @@
     "Anders Sundman <anders@4zm.org>"
   ],
   "description": "Garden planner",
-  "license": "GPLv3",
+  "license": "AGPLv3",
   "private": true,
   "ignore": [
     "**/.*",
