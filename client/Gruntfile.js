@@ -11,12 +11,36 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
 
         jshint: {
-            files: ['Gruntfile.js', '<%= appdir %>/js/*.js'],
+            files: ['Gruntfile.js',
+                    '<%= appdir %>/**/*.js',
+                    '<%= testdir %>/unit/**/*.js',
+                    '<%= testdir %>/e2e/**/*.js'],
             options:{
                 globalstrict: true,
                 globals:{
-                    module: true, // grunt
-                    angular: true
+                    module: true, // Grunt
+                    angular: true, // AngularJS
+
+                    // Jasmine
+                    describe: true,
+                    xdescribe: true,
+                    it: true,
+                    xit: true,
+                    expect: true,
+                    beforeEach: true,
+                    afterEach: true,
+                    beforeAll: true,
+                    afterAll: true,
+                    spyOn: true,
+                    runs: true,
+                    waits: true,
+                    waitsFor: true,
+
+                    // Angular testing
+                    // module: true,
+                    inject: true,
+                    browser: true,
+                    element: true
                 },
             },
         },
@@ -25,7 +49,20 @@ module.exports = function(grunt) {
             unit: {
                 configFile: '<%= testdir %>/config/karma.conf.js',
                 singleRun: true,
+            },
+            unitheadless: {
+                configFile: '<%= testdir %>/config/karma.conf.js',
+                singleRun: true,
                 browsers: ['PhantomJS']
+            },
+            e2eheadless: {
+                configFile: '<%= testdir %>/config/karma-e2e.conf.js',
+                singleRun: true,
+                browsers: ['PhantomJS']
+            },
+            e2e: {
+                configFile: '<%= testdir %>/config/karma-e2e.conf.js',
+                singleRun: true,
             },
         },
 
@@ -82,16 +119,19 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-usemin');
 
     // Default is prep
-    grunt.registerTask('default', ['clean', 'test', 'lint']);
+    grunt.registerTask('default', ['clean', 'test']);
 
     // Check code
     grunt.registerTask('lint', ['jshint']);
 
-    // Run unit tests
-    grunt.registerTask('test', ['karma:unit']);
+    // Run tests
+    grunt.registerTask('test', ['lint', 'karma:unitheadless', 'karma:e2eheadless']);
+
+    // Run all tests
+    grunt.registerTask('testall', ['lint', 'karma:unit', 'karma:e2e']);
 
     // Run before checkin - lint and test
-    grunt.registerTask('prep', ['clean', 'test', 'lint']);
+    grunt.registerTask('prep', ['clean', 'testall']);
 
     // State deployment area
     grunt.registerTask('deploy', ['clean', 'copy', 'useminPrepare', 'concat', 'uglify', 'usemin']);

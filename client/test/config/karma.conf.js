@@ -5,9 +5,10 @@ module.exports = function(config){
         basePath : '../../',
 
         files : [
-            'app/lib/angular/angular.js',
+            'src/lib/angular/*.js',
             'test/lib/angular/angular-mocks.js',
-            'app/js/**/*.js',
+            'src/app/app.js',
+            'src/app/**/*.js',
             'test/unit/**/*.js'
         ],
 
@@ -15,7 +16,7 @@ module.exports = function(config){
 
         frameworks: ['jasmine'],
 
-        browsers : ['Firefox', 'PhantomJS'],
+        browsers : ['PhantomJS', 'Firefox', 'Chrome'],
 
         plugins : [
             'karma-junit-reporter',
@@ -29,4 +30,4 @@ module.exports = function(config){
             outputFile: 'test_out/unit.xml',
             suite: 'unit'
         }
-    })}
+    });};
