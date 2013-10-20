@@ -15,8 +15,7 @@
 
 'use strict';
 
-angular.module('spira.home', [])
-  .controller('HomeCtrl', [function() {
-
-  }]);
+angular.module('spira.home')
+    .controller('HomeCtrl', [function() {
+    }]);
 

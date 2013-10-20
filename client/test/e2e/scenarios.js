@@ -17,7 +17,7 @@ describe('spira', function() {
     });
 
     it('should render home when user navigates to /home', function() {
-        expect(element('[ng-view] h1:first').text()).toMatch('Hem');
+        expect(element('h1:first').text()).toMatch('Hem');
     });
 
   });

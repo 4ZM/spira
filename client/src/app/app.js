@@ -15,6 +15,10 @@
 
 'use strict';
 
+angular.module('spira.home', []);
+angular.module('spira.catalog', []);
+angular.module('spira.planner', []);
+
 angular.module('spira', ['spira.home', 'spira.catalog', 'spira.planner']).
   config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/home', {templateUrl: 'app/home/home.tpl.html', controller: 'HomeCtrl'});

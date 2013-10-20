@@ -15,8 +15,6 @@
 
 'use strict';
 
-angular.module('spira.planner', [])
-  .controller('PlannerCtrl', [function() {
-
-  }]);
-
+angular.module('spira.planner')
+    .controller('PlannerCtrl', [function() {
+    }]);
