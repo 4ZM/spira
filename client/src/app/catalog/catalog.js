@@ -15,8 +15,18 @@
 
 'use strict';
 
-angular.module('spira.catalog', [])
-  .controller('CatalogCtrl', [function() {
+angular.module('spira.catalog', []);
 
-  }]);
+// Catalog Controller
+angular.module('spira.catalog')
+    .controller('CatalogCtrl', ['$scope', function($scope) {
+        $scope.species = [
+            {'name': 'Carrot',
+             'kindname': 'Early Nantes'},
+            {'name': 'Carrot',
+             'kindname': 'Amsterdam'},
+            {'name': 'Corn',
+             'kindname': 'Ashworth'},
+        ];
+    }]);
 

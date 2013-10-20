@@ -1,11 +1,21 @@
-<div class="container">
+<div class="row">
+  <div class="bs-sidebar hidden-print col-md-2 well"
+       role="complementary">
 
-  <div class="starter-template">
-    <div>
-      <h1>Katalog</h1>
-      <p>meh</p>
-    </div>
+    <form class="form-search">
+      <input type="text"
+             class="search-query"
+             placeholder="Search&hellip;">
+    </form>
+
+    <ul class="nav bs-sidenav">
+        <li ng-repeat="s in species"><a href="#fu">{{s.name}} - {{s.kindname}}</a></li>
+    </ul>
+
   </div>
 
+  <div class="col-md-10">
+    <p>{{species}}</p>
+  </div>
 </div>
 

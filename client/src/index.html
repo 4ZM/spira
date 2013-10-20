@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="spira">
+<html lang="en" data-ng-app="spira">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,13 +12,12 @@
     <!-- build:css css/app.css -->
     <link href="css/spira.css" rel="stylesheet">
     <!-- endbuild -->
-
   </head>
 
   <body>
 
-    <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
+    <header class="navbar navbar-inverse navbar-fixed-top">
+
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="icon-bar"></span>
@@ -32,11 +31,11 @@
             <li><a href="#catalog">Katalog</a></li>
             <li><a href="#planner">Planerare</a></li>
           </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </div>
+        </div>
 
-    <div ng-view></div>
+    </header>
+
+    <div data-ng-view></div>
 
     <!-- build:js js/libs.js -->
     <script src="lib/jquery/jquery.js"></script>
