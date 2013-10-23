@@ -19,7 +19,7 @@
             [spira.dm.seeding :as seeding]
             [spira.dm.test-util :as test-util]
             [spira.core.util :as util])
-  
+
   (:import [spira.dm.species PlantSpecies])
   (:import [spira.dm.garden Garden])
   (:import [spira.dm.seeding Seeding]))
@@ -28,20 +28,33 @@
 ;; used in unit tests.
 
 ;; Garden repo
-(def gardens (atom '()))
+(def garden-id-cnt (ref 0))
+(def gardens (ref {}))
 (deftype InMemoryGardenRepo []
   garden/GardenRepo
   (list-gardens [this] @gardens)
-  (get-garden [this name]
-    (util/find-first #(= name (:name %)) (.list-gardens this)))
-  (add-garden [this g] (swap! gardens conj g)))
+  (get-garden [this id] (get @gardens id))
+  (add-garden [this g]
+    (dosync
+     (alter garden-id-cnt inc)
+     (alter gardens assoc @garden-id-cnt g))
+    @garden-id-cnt)
+  (update-garden [repo id g]
+    (dosync
+     (alter gardens assoc id g))))
 
-(defn- create-test-gardens []
+;; Populate garden repo with some data
+(defn create-test-gardens []
+  (dosync
+   (ref-set gardens {})
+   (ref-set garden-id-cnt 0))
   (let [garden-repo (InMemoryGardenRepo.)]
     (.add-garden garden-repo (garden/create-garden "Babylon"))
-    (.add-garden garden-repo (garden/create-garden "Luxor"))
+    (.add-garden garden-repo (garden/create-garden "Versailles"))
     garden-repo))
-(def test-garden-repo (create-test-gardens))
+
+(defn setup-test-repos []
+  (garden/set-garden-repo (create-test-gardens)))
 
 ;; Add seedings
 ;;(def seeding-1 (seeding/create-seeding (:id babylon)))

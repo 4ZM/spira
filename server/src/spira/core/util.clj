@@ -19,6 +19,10 @@
   "Create a GUID string."
   (str (java.util.UUID/randomUUID)))
 
+(defn parse-int [s]
+  "a2i"
+  (Integer. (re-find  #"\d+" s )))
+
 (defn find-first [f coll]
   "Get first item in a seq matching a predicate."
   (first (filter f coll)))

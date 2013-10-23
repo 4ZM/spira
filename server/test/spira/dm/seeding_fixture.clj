@@ -20,7 +20,7 @@
             [spira.dm.species :as species])
   (:import [spira.dm.species PlantSpecies])
   (:use spira.dm.seeding))
- 
+
 (def carrot (util/create-test-plant "Carrot" "Early Nantes"))
 (def corn (util/create-test-plant "Corn" "Ashworth"))
 

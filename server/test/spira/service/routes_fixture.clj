@@ -29,11 +29,17 @@
 
 (deftest test-not-found
   (testing "Testing a non existant route"
-    (is (= http-req-not-found (:status (app-routes (test-req "/this/is/not/a/valid/route")))))
+    (is (= http-req-not-found
+           (:status (app-routes (test-req "/api/is/not/a/valid/route")))))
     ))
 
-(deftest test-gardens
-  (testing "Testing the /api/gardens route"
-    (is (= http-req-ok (:status (app-routes (test-req "/api/gardens")))))
-    (is (= http-req-bad (:status (app-routes (test-req "/api/gardens" {:id "eden"})))))
+(deftest test-garden-req-list
+  (testing "Testing the /api/garden list route"
+    (is (= http-req-ok (:status (app-routes (test-req "/api/garden")))))
+    ))
+
+(deftest test-garden-req
+  (testing "Testing the /api/garden/id route"
+    (is (= http-req-ok (:status (app-routes (test-req "/api/garden/1")))))
+    (is (= http-req-bad (:status (app-routes (test-req "/api/garden/100000")))))
     ))

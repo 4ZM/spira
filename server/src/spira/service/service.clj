@@ -25,16 +25,12 @@
             [compojure.response :as response]))
 
 ;; Change set this to a propper repo
-(deftype NopGardenRepo []
-  garden/GardenRepo
-  (list-gardens [this] nil)
-  (get-garden [this name] nil)
-  (add-garden [this g] nil))
-(def garden-repo (NopGardenRepo.))
+(defn req-garden [id]
+  "Respond to /garden/id GET request"
+  (let [g (.get-garden (garden/get-garden-repo) id)]
+         (if (nil? g) :bad-req g)))
 
-(defn req-gardens
-  "Respond to /gardens request"
-  ([] (map (fn [g] {:name (.name g)}) (.list-gardens garden-repo)))
-  ([id] (let [g (.get-garden garden-repo id)]
-          (if (nil? g) :bad-req {:name (.name g)})
-            )))
+(defn req-garden-list []
+  "Respond to /garden GET request"
+  (map :name (vals (.list-gardens (garden/get-garden-repo))))
+)

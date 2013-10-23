@@ -17,11 +17,33 @@
   (:require [clojure.test :refer :all]
             [spira.dm.garden :refer :all]))
 
-(def babylon (create-garden "babylon"))
-(def luxor (create-garden "luxor"))
+(deftype NopGardenRepo []
+  GardenRepo
+  (list-gardens [this] nil)
+  (get-garden [this id] nil)
+  (add-garden [this g] 0)
+  (update-garden [this id g] g))
 
-(deftest test-id-func
-  (testing "Testing the garden identity function"
-    (is (= (id babylon) (id babylon)))
-    (is (not (= (id babylon) (id luxor))))
-    ))
+;; Make sure we reset the garden repo before each test
+(defn reset-repo-fixture [f]
+  (set-garden-repo nil)
+  (f))
+(use-fixtures :each reset-repo-fixture)
+
+;; Tests
+
+(deftest test-names
+  (testing "Testing the garden identity function")
+  (let [babylon (create-garden "babylon")
+        keukenhof (create-garden "Keukenhof")]
+    (is (= (.name babylon) (.name babylon)))
+    (is (not (= (.name babylon) (.name keukenhof)))))
+    )
+
+(deftest test-repo-locator
+  (testing "Test the garden locator")
+  (let [gr (NopGardenRepo.)]
+    (is (= (get-garden-repo) nil))
+    (set-garden-repo gr)
+    (is (= (get-garden-repo) gr)))
+    )

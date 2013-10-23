@@ -17,17 +17,22 @@
 
 (defrecord Garden [name seedings])
 
-;; Get an unique id for a garden
-(defn id [{name :name}]
-  (clojure.string/replace name \space \_))
-
 ;; Garden factory
 (defn create-garden [name]
   (Garden. name {}))
 
 ;; Garden Repository
 (defprotocol GardenRepo
-  "Repository of Gardens. For reading, writing and searching."
-  (list-gardens [repo] "A seq of all gardens.")
-  (get-garden [repo name] "Get a specific garden.")
-  (add-garden [repo garden] "Add a new garden to the repository."))
+  "Repository of Gardens. Supports CRUD style operations."
+  (list-gardens [repo]
+    "Get a seq of all gardens in the repo.")
+  (get-garden [repo id]
+    "Get a specific garden by it's id.")
+  (add-garden [repo garden]
+    "Add a new garden to the repository. The added garden's id is returned.")
+  (update-garden [repo id garden]
+    "Modify the garden identified by id."))
+
+(let [repo (atom nil)]
+  (defn get-garden-repo [] @repo)
+  (defn set-garden-repo [new-repo] (reset! repo new-repo)))
