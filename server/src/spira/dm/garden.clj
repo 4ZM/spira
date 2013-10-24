@@ -21,7 +21,7 @@
 (defn create-garden [name]
   (Garden. name {}))
 
-;; Garden Repository
+;; Garden repository
 (defprotocol GardenRepo
   "Repository of Gardens. Supports CRUD style operations."
   (list-gardens [repo]
@@ -33,6 +33,11 @@
   (update-garden [repo id garden]
     "Modify the garden identified by id."))
 
-(let [repo (atom nil)]
-  (defn get-garden-repo [] @repo)
-  (defn set-garden-repo [new-repo] (reset! repo new-repo)))
+;; The garden repo singleton
+(def garden-repo (atom nil))
+(defn get-garden-repo []
+  (assert @garden-repo "Request before initialization")
+  @garden-repo)
+(defn set-garden-repo [new]
+  (assert (or (nil? new) (nil? @garden-repo)) "Can't reset to anything but nil")
+  (reset! garden-repo new))

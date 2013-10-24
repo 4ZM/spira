@@ -54,6 +54,7 @@
     garden-repo))
 
 (defn setup-test-repos []
+  (garden/set-garden-repo nil)
   (garden/set-garden-repo (create-test-gardens)))
 
 ;; Add seedings

@@ -43,7 +43,13 @@
 (deftest test-repo-locator
   (testing "Test the garden locator")
   (let [gr (NopGardenRepo.)]
-    (is (= (get-garden-repo) nil))
+    ;; Must assign before first req
+    (is (thrown? AssertionError (get-garden-repo)))
+
+    ;; Then it works
     (set-garden-repo gr)
-    (is (= (get-garden-repo) gr)))
+    (is (= (get-garden-repo) gr))
+
+    ;; But can't be assigned again directly
+    (is (thrown? AssertionError (set-garden-repo 777))))
     )
