@@ -32,5 +32,16 @@
 
 (defn req-garden-list []
   "Respond to /garden GET request"
-  (map :name (vals (.list-gardens (garden/get-garden-repo))))
-)
+  (map :name (vals (.list-gardens (garden/get-garden-repo)))))
+
+(defn create-garden []
+  "Create garden request"
+  {})
+
+(defn update-garden [id]
+  "Update garden request"
+  {})
+
+(defn delete-garden [id]
+  "Delete garden request"
+  {})

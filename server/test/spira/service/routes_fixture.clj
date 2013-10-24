@@ -22,24 +22,39 @@
 (def http-req-bad 400)
 (def http-req-not-found 404)
 
-(defn test-req [uri & params]
-  {:request-method :get
+(defn test-req [method uri & params]
+  {:request-method method
    :uri uri :headers []
    :params (first params)})
 
 (deftest test-not-found
   (testing "Testing a non existant route"
     (is (= http-req-not-found
-           (:status (app-routes (test-req "/api/is/not/a/valid/route")))))
+           (:status (app-routes (test-req :get "/api/is/not/a/valid/route")))))
     ))
 
 (deftest test-garden-req-list
-  (testing "Testing the /api/garden list route"
-    (is (= http-req-ok (:status (app-routes (test-req "/api/garden")))))
+  (testing "Testing the /api/garden list route : get list"
+    (is (= http-req-ok (:status (app-routes (test-req :get "/api/garden")))))
     ))
 
 (deftest test-garden-req
-  (testing "Testing the /api/garden/id route"
-    (is (= http-req-ok (:status (app-routes (test-req "/api/garden/1")))))
-    (is (= http-req-bad (:status (app-routes (test-req "/api/garden/100000")))))
+  (testing "Testing the /api/garden/id route : get"
+    (is (= http-req-ok (:status (app-routes (test-req :get "/api/garden/1")))))
+    (is (= http-req-bad (:status (app-routes (test-req :get "/api/garden/100000")))))
+    ))
+
+(deftest test-garden-create
+  (testing "Testing the /api/garden post route : create"
+    (is (= http-req-ok (:status (app-routes (test-req :post "/api/garden")))))
+    ))
+
+(deftest test-garden-update
+  (testing "Testing the /api/garden/id put route : update"
+    (is (= http-req-ok (:status (app-routes (test-req :put "/api/garden/1")))))
+    ))
+
+(deftest test-garden-delete
+  (testing "Testing the /api/garden/id delete route : delete"
+    (is (= http-req-ok (:status (app-routes (test-req :delete "/api/garden/1")))))
     ))

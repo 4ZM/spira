@@ -40,3 +40,18 @@
     (is (= "Keukenhof" (:name (req-garden garden-id))))
     (is (= :bad-req (req-garden "NoSuchGarden")))
     ))
+
+(deftest test-create-garden
+  (testing "Testing garden creation")
+  ;; test goes here
+  )
+
+(deftest test-update-garden
+  (testing "Testing garden modification")
+  ;; test goes here
+  )
+
+(deftest test-delete-garden
+  (testing "Testing garden removal")
+  ;; test goes here
+  )
