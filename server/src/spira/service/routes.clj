@@ -42,7 +42,7 @@
 (defroutes app-routes
   (GET "/api/garden/:id" [id]
        (json-response (service/req-garden (util/parse-int id))))
-  (GET ["/api/garden"] []
+  (GET "/api/garden" []
        (json-response (service/req-garden-list)))
   (route/not-found "Page not found"))
 
