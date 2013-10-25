@@ -18,6 +18,12 @@
             [spira.dm.test-model :refer :all]
             [spira.service.routes :refer :all]))
 
+;; Make sure we setup the dm test repos before each test
+(defn reset-repo-fixture [f]
+  (setup-test-repos)
+  (f))
+(use-fixtures :each reset-repo-fixture)
+
 (def http-req-ok 200)
 (def http-req-bad 400)
 (def http-req-not-found 404)
@@ -46,12 +52,14 @@
 
 (deftest test-garden-create
   (testing "Testing the /api/garden post route : create"
-    (is (= http-req-ok (:status (app-routes (test-req :post "/api/garden")))))
+    (is (= http-req-ok
+           (:status (app-routes (test-req :post "/api/garden" {:name "torture"})))))
     ))
 
 (deftest test-garden-update
   (testing "Testing the /api/garden/id put route : update"
-    (is (= http-req-ok (:status (app-routes (test-req :put "/api/garden/1")))))
+    (is (= http-req-ok
+           (:status (app-routes (test-req :put "/api/garden/1" {:name "torture"})))))
     ))
 
 (deftest test-garden-delete

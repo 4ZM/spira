@@ -41,7 +41,11 @@
     @garden-id-cnt)
   (update-garden [repo id g]
     (dosync
-     (alter gardens assoc id g))))
+     (alter gardens assoc id g)))
+  (delete-garden [repo id]
+    (dosync
+     (alter gardens dissoc @garden-id-cnt id)
+     )))
 
 ;; Populate garden repo with some data
 (defn create-test-gardens []

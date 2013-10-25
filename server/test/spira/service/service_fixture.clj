@@ -38,20 +38,30 @@
   (let [repo (garden/get-garden-repo)
         garden-id (.add-garden repo (garden/create-garden "Keukenhof"))]
     (is (= "Keukenhof" (:name (req-garden garden-id))))
-    (is (= :bad-req (req-garden "NoSuchGarden")))
+    (is (= :bad-req (req-garden 777)))
     ))
 
 (deftest test-create-garden
   (testing "Testing garden creation")
-  ;; test goes here
-  )
+  (let [repo (garden/get-garden-repo)
+        new-id (create-garden {:name "Keukenhof"})]
+    (is (= "Keukenhof" (:name (-> repo (.get-garden new-id)))))))
 
 (deftest test-update-garden
   (testing "Testing garden modification")
-  ;; test goes here
-  )
+  (let [repo (garden/get-garden-repo)
+        gid 1
+        g (garden/get-garden repo gid)]
+    (is (not (= "Torture" (:name g))))
+    (update-garden gid {:name "Torture"})
+    (is (= "Torture" (:name (garden/get-garden repo gid))))
+    ))
 
 (deftest test-delete-garden
   (testing "Testing garden removal")
-  ;; test goes here
-  )
+  (let [repo (garden/get-garden-repo)
+        gid 1]
+    (is (not (= :bad-req (req-garden gid))))
+    (delete-garden gid)
+    (is (= :bad-req (req-garden gid)))
+    ))

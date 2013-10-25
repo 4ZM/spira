@@ -44,12 +44,12 @@
        (json-response (service/req-garden (util/parse-int id))))
   (GET "/api/garden" []
        (json-response (service/req-garden-list)))
-  (POST "/api/garden" []
-       (json-response (service/create-garden)))
-  (PUT "/api/garden/:id" [id]
-       (json-response (service/update-garden (util/parse-int id))))
+  (POST "/api/garden" [params]
+       (json-response (service/create-garden params)))
+  (PUT "/api/garden/:id" [id params]
+       (json-response (service/update-garden (util/parse-int id) params)))
   (DELETE "/api/garden/:id" [id]
-       (json-response (service/delete-garden (util/parse-int id))))
+          (json-response (service/delete-garden (util/parse-int id))))
   (route/not-found "Page not found"))
 
 (def app

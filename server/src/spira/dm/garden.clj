@@ -31,7 +31,9 @@
   (add-garden [repo garden]
     "Add a new garden to the repository. The added garden's id is returned.")
   (update-garden [repo id garden]
-    "Modify the garden identified by id."))
+    "Modify the garden identified by id.")
+  (delete-garden [repo id]
+    "Remove a garden from a repository"))
 
 ;; The garden repo singleton
 (def garden-repo (atom nil))

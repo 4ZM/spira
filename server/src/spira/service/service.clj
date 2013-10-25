@@ -34,14 +34,19 @@
   "Respond to /garden GET request"
   (map :name (vals (.list-gardens (garden/get-garden-repo)))))
 
-(defn create-garden []
+(defn create-garden [params]
   "Create garden request"
-  {})
+  (let [r (garden/get-garden-repo)
+        new-garden (garden/create-garden (:name params))]
+    (.add-garden r new-garden)))
 
-(defn update-garden [id]
+(defn update-garden [id params]
   "Update garden request"
-  {})
+  (let [r (garden/get-garden-repo)
+        new-garden (garden/create-garden (:name params))]
+    (.update-garden r id new-garden)))
 
 (defn delete-garden [id]
   "Delete garden request"
-  {})
+  (let [r (garden/get-garden-repo)]
+    (.delete-garden r id)))
