@@ -17,13 +17,6 @@
   (:require [clojure.test :refer :all]
             [spira.dm.garden :refer :all]))
 
-(deftype NopGardenRepo []
-  GardenRepo
-  (list-gardens [this] nil)
-  (get-garden [this id] nil)
-  (add-garden [this g] 0)
-  (update-garden [this id g] g))
-
 ;; Make sure we reset the garden repo before each test
 (defn reset-repo-fixture [f]
   (set-garden-repo nil)
@@ -42,14 +35,11 @@
 
 (deftest test-repo-locator
   (testing "Test the garden locator")
-  (let [gr (NopGardenRepo.)]
-    ;; Must assign before first req
-    (is (thrown? AssertionError (get-garden-repo)))
-
-    ;; Then it works
-    (set-garden-repo gr)
-    (is (= (get-garden-repo) gr))
-
-    ;; But can't be assigned again directly
-    (is (thrown? AssertionError (set-garden-repo 777))))
-    )
+  ;; Must assign before first req
+  (is (thrown? AssertionError (get-garden-repo)))
+  ;; Then it works
+  (set-garden-repo :repo)
+  (is (= (get-garden-repo) :repo))
+  ;; But can't be assigned again directly
+  (is (thrown? AssertionError (set-garden-repo :repo)))
+  )

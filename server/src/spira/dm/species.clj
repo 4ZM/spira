@@ -36,3 +36,17 @@
   (list-species [repo] "A seq of all species.")
   (get-species [repo name] [repo name kind] "Get a species or a list if several match the name.")
   (add-species [repo species] "Add a new species to the repository."))
+
+;; Species repository
+(defprotocol SpeciesRepo
+  "Repository of Gardens. Supports CRUD style operations."
+  (list-gardens [repo]
+    "Get a seq of all gardens in the repo.")
+  (get-garden [repo id]
+    "Get a specific garden by it's id.")
+  (add-garden [repo garden]
+    "Add a new garden to the repository. The added garden's id is returned.")
+  (update-garden [repo id garden]
+    "Modify the garden identified by id.")
+  (delete-garden [repo id]
+    "Remove a garden from a repository"))
