@@ -14,55 +14,67 @@
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 (ns spira.service.routes-fixture
-  (:require [clojure.test :refer :all]
+  (:require [midje.sweet :refer :all]
             [spira.dm.test-model :refer :all]
+            [spira.service.service :as service]
             [spira.service.routes :refer :all]))
 
-;; Make sure we setup the dm test repos before each test
-(defn reset-repo-fixture [f]
-  (setup-test-repos)
-  (f))
-(use-fixtures :each reset-repo-fixture)
-
-(def http-req-ok 200)
-(def http-req-bad 400)
-(def http-req-not-found 404)
-
-(defn test-req [method uri & params]
+(defn- test-req [method uri & params]
   {:request-method method
    :uri uri :headers []
    :params (first params)})
 
-(deftest test-not-found
-  (testing "Testing a non existant route"
-    (is (= http-req-not-found
-           (:status (app-routes (test-req :get "/api/is/not/a/valid/route")))))
-    ))
+(defn- test-resp [status & data]
+  "Helper to create mock responses"
+  (if (nil? data) {:status status} {:status status :data data}))
 
-(deftest test-garden-req-list
-  (testing "Testing the /api/garden list route : get list"
-    (is (= http-req-ok (:status (app-routes (test-req :get "/api/garden")))))
-    ))
+(facts "about invalid requests"
+  (fact "Invalid routes give error status"
+    (:status (app-routes (test-req :get "/api/is/not/a/valid/route"))) =>
+    (:not-found http-status)))
 
-(deftest test-garden-req
-  (testing "Testing the /api/garden/id route : get"
-    (is (= http-req-ok (:status (app-routes (test-req :get "/api/garden/1")))))
-    (is (= http-req-bad (:status (app-routes (test-req :get "/api/garden/100000")))))
-    ))
+(facts "about list requests"
+  (fact "/api/garden requests list"
+    (let [req (test-req :get "/api/garden")]
+      (:status (app-routes req)) => (:ok http-status)
+      (provided (service/req-garden-list) => (test-resp :ok []) :times 1))))
 
-(deftest test-garden-create
-  (testing "Testing the /api/garden post route : create"
-    (is (= http-req-ok
-           (:status (app-routes (test-req :post "/api/garden" {:name "torture"})))))
-    ))
+(facts "about garden get requests"
+  (fact "/api/garden/id gets garden"
+    (:status (app-routes (test-req :get "/api/garden/1"))) => (:ok http-status)
+    (provided (service/req-garden 1) => (test-resp :ok {}) :times 1))
+  (fact "/api/garden/id with wrong id reports error"
+    (:status (app-routes (test-req :get "/api/garden/1"))) => (:bad-req http-status)
+    (provided (service/req-garden 1) => (test-resp :bad-req) :times 1)))
 
-(deftest test-garden-update
-  (testing "Testing the /api/garden/id put route : update"
-    (is (= http-req-ok
-           (:status (app-routes (test-req :put "/api/garden/1" {:name "torture"})))))
-    ))
+(facts "about garden create requests"
+  (fact "/api/garden post creates garden"
+    (let [params {:name "torture"}
+          req (test-req :post "/api/garden" params)]
+      (:status (app-routes req)) => (:created http-status)
+      (provided (service/create-garden params) =>
+                (test-resp :created {:id 1}) :times 1)))
 
-(deftest test-garden-delete
-  (testing "Testing the /api/garden/id delete route : delete"
-    (is (= http-req-ok (:status (app-routes (test-req :delete "/api/garden/1")))))
-    ))
+  (fact "/api/garden post bad data gives error"
+    (let [bad-params {:wierd "param"}
+          req (test-req :post "/api/garden" bad-params)]
+      (:status (app-routes req)) => (:bad-req http-status)
+      (provided (service/create-garden bad-params) =>
+                (test-resp :bad-req) :times 1))))
+
+(facts "about garden update requests"
+  (fact "/api/garden/id put request updates"
+    (let [params {:name "torture"}
+          req (test-req :put "/api/garden/1" params)]
+      (:status (app-routes req)) => (:ok http-status)
+      (provided (service/update-garden 1 params) =>
+                (test-resp :ok) :times 1))))
+
+(facts "about garden delete requests"
+  (fact "/api/garden/id delete request deletes"
+    (let [req (test-req :delete "/api/garden/1")]
+      (:status (app-routes req)) => (:ok http-status)
+      (provided (service/delete-garden 1) =>
+                (test-resp :ok) :times 1)
+      )))
+

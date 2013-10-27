@@ -24,12 +24,21 @@
             [compojure.handler :as handler]
             [compojure.response :as response]))
 
-(defn json-response [data & [status]]
-  (let [status (or status (if (= data :bad-req) 400) 200)]
-   {:status status
-    :headers {"Content-Type" "application/json"}
-    :body (if (= status 200) (json/generate-string data))}))
+(def http-status
+  {:ok 200
+   :created 201
+   :bad-req 400
+   :not-found 404
+   })
 
+(defn json-response [{status :status data :data}]
+  "Create a json HTTP response from a status keyword and a map"
+  (let [status-code (status http-status)
+        resp {:status status-code
+              :headers {"Content-Type" "application/json"}}]
+    (if (nil? data)
+      resp
+      (assoc resp :body (json/generate-string data)))))
 
 ;; The CRUD REST api follows the following schema:
 ;;
@@ -44,9 +53,9 @@
        (json-response (service/req-garden (util/parse-int id))))
   (GET "/api/garden" []
        (json-response (service/req-garden-list)))
-  (POST "/api/garden" [params]
-       (json-response (service/create-garden params)))
-  (PUT "/api/garden/:id" [id params]
+  (POST "/api/garden" [& params]
+        (json-response (service/create-garden params)))
+  (PUT "/api/garden/:id" [id & params]
        (json-response (service/update-garden (util/parse-int id) params)))
   (DELETE "/api/garden/:id" [id]
           (json-response (service/delete-garden (util/parse-int id))))
