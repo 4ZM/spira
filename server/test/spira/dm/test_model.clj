@@ -17,55 +17,14 @@
   (:require [spira.dm.garden :as garden]
             [spira.dm.plant-desc :as plant-desc]
             [spira.dm.seeding :as seeding]
+            [spira.dm.in-memory-repo :as imr]
             [spira.core.util :as util]))
-
 ;; This class creates and populates a small domain model that can be
 ;; used in unit tests.
 
-;; Repo
-(def id-cnt (ref 0))
-(def gardens (ref {}))
-(def plant-descriptions (ref {}))
-(deftype InMemoryGardenRepo []
-  garden/GardenRepo
-  (list-gardens [this] (for [[id g] @gardens] {:id id :name (:name g)}))
-  (get-garden [this id] (get @gardens id))
-  (add-garden [this g]
-    (dosync
-     (alter id-cnt inc)
-     (alter gardens assoc @id-cnt g))
-    @id-cnt)
-  (update-garden [repo id g]
-    (dosync
-     (alter gardens assoc id g)))
-  (delete-garden [repo id]
-    (dosync
-     (alter gardens dissoc @gardens id)
-     ))
-  plant-desc/PlantDescriptionRepo
-  (list-descriptions [repo]
-    (for [[id d] @plant-descriptions] {:id id :kind (:kind (:name d))}))
-  (get-plant-desc [repo id]
-    (get @plant-descriptions id))
-  (add-plant-desc [repo desc]
-    (dosync
-     (alter id-cnt inc)
-     (alter plant-descriptions assoc @id-cnt desc))
-    @id-cnt)
-  (update-plant-desc [repo id desc]
-    (dosync
-     (alter plant-descriptions assoc id desc)))
-  (delete-plant-desc [repo id]
-    (dosync
-     (alter plant-descriptions dissoc @plant-descriptions id)
-     )))
-
-;; Populate garden repo with some data
 (defn create-test-repo []
-  (dosync
-   (ref-set gardens {})
-   (ref-set id-cnt 0))
-  (let [repo (InMemoryGardenRepo.)]
+  (imr/reset-repo!)
+  (let [repo (imr/->InMemoryRepo)]
     (.add-garden repo (garden/create-garden "Babylon"))
     (.add-garden repo (garden/create-garden "Versailles"))
     (.add-plant-desc repo (plant-desc/create-plant-desc

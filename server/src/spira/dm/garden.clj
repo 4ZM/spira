@@ -19,7 +19,7 @@
 
 ;; Garden factory
 (defn create-garden [name]
-  (Garden. name []))
+  (->Garden name []))
 
 ;; Garden repository
 (defprotocol GardenRepo

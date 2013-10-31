@@ -22,6 +22,6 @@
 
 ;; Seeding factory
 (defn create-seeding [species-desc]
-  (Seeding. (util/uuid) species-desc))
+  (->Seeding (util/uuid) species-desc))
 
 

@@ -20,7 +20,7 @@
 
 ;; Garden factory
 (defn create-plant-desc [family genus species kind]
-  (PlantDescription. (PlantName. family genus species kind)))
+  (->PlantDescription (->PlantName family genus species kind)))
 
 ;; Plant repository
 (defprotocol PlantDescriptionRepo
