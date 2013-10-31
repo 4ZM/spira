@@ -16,7 +16,6 @@
 (ns spira.service.routes
   (:require [spira.core.util :as util]
             [spira.service.service :as service]
-            [spira.service.views :refer :all]
             [ring.middleware.params :refer [wrap-params]]
             [cheshire.core :as json]
             [compojure.core :refer :all]
@@ -59,7 +58,7 @@
        (json-response (service/update-garden (util/parse-uint id) params)))
   (DELETE "/api/garden/:id" [id]
           (json-response (service/delete-garden (util/parse-uint id))))
-  (route/not-found "Page not found"))
+  (route/not-found "Not Found"))
 
 (def app
   (-> (handler/site app-routes)))

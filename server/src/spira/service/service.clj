@@ -17,7 +17,6 @@
   (:require [compojure.core :refer :all]
             [spira.dm.garden :as garden]
             [spira.dm.test-model :refer :all]
-            [spira.service.views :refer :all]
             [hiccup.middleware :refer [wrap-base-url]]
             [cheshire.core :as json]
             [compojure.route :as route]
