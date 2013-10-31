@@ -21,6 +21,18 @@
 (defn create-garden [name]
   (->Garden name []))
 
+(defn add-seeding [g s]
+  "Add a seeding to a garden"
+  (update-in g [:seedings] conj s))
+
+(defn- rm-seeding-impl [seedings sid]
+  "Given a list of seedings, remove the one with a matching id"
+  (remove (fn [{id :id}] (= id sid)) seedings))
+
+(defn rm-seeding [g id]
+  "Remove a seeding from a garden"
+  (update-in g [:seedings] rm-seeding-impl id))
+
 ;; Garden repository
 (defprotocol GardenRepo
   "Repository of Gardens. Supports CRUD style operations."
