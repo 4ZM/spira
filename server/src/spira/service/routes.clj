@@ -50,15 +50,15 @@
 
 (defroutes app-routes
   (GET "/api/garden/:id" [id]
-       (json-response (service/req-garden (util/parse-int id))))
+       (json-response (service/req-garden (util/parse-uint id))))
   (GET "/api/garden" []
        (json-response (service/req-garden-list)))
   (POST "/api/garden" [& params]
         (json-response (service/create-garden params)))
   (PUT "/api/garden/:id" [id & params]
-       (json-response (service/update-garden (util/parse-int id) params)))
+       (json-response (service/update-garden (util/parse-uint id) params)))
   (DELETE "/api/garden/:id" [id]
-          (json-response (service/delete-garden (util/parse-int id))))
+          (json-response (service/delete-garden (util/parse-uint id))))
   (route/not-found "Page not found"))
 
 (def app

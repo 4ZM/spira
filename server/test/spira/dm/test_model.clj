@@ -15,73 +15,70 @@
 
 (ns spira.dm.test-model
   (:require [spira.dm.garden :as garden]
-            [spira.dm.species :as species]
+            [spira.dm.plant-desc :as plant-desc]
             [spira.dm.seeding :as seeding]
-            [spira.dm.test-util :as test-util]
-            [spira.core.util :as util])
-
-  (:import [spira.dm.species PlantSpecies])
-  (:import [spira.dm.garden Garden])
-  (:import [spira.dm.seeding Seeding]))
+            [spira.core.util :as util]))
 
 ;; This class creates and populates a small domain model that can be
 ;; used in unit tests.
 
-;; Garden repo
-(def garden-id-cnt (ref 0))
+;; Repo
+(def id-cnt (ref 0))
 (def gardens (ref {}))
+(def plant-descriptions (ref {}))
 (deftype InMemoryGardenRepo []
   garden/GardenRepo
-  (list-gardens [this] @gardens)
+  (list-gardens [this] (for [[id g] @gardens] {:id id :name (:name g)}))
   (get-garden [this id] (get @gardens id))
   (add-garden [this g]
     (dosync
-     (alter garden-id-cnt inc)
-     (alter gardens assoc @garden-id-cnt g))
-    @garden-id-cnt)
+     (alter id-cnt inc)
+     (alter gardens assoc @id-cnt g))
+    @id-cnt)
   (update-garden [repo id g]
     (dosync
      (alter gardens assoc id g)))
   (delete-garden [repo id]
     (dosync
-     (alter gardens dissoc @garden-id-cnt id)
+     (alter gardens dissoc @gardens id)
+     ))
+  plant-desc/PlantDescriptionRepo
+  (list-descriptions [repo]
+    (for [[id d] @plant-descriptions] {:id id :kind (:kind (:name d))}))
+  (get-plant-desc [repo id]
+    (get @plant-descriptions id))
+  (add-plant-desc [repo desc]
+    (dosync
+     (alter id-cnt inc)
+     (alter plant-descriptions assoc @id-cnt desc))
+    @id-cnt)
+  (update-plant-desc [repo id desc]
+    (dosync
+     (alter plant-descriptions assoc id desc)))
+  (delete-plant-desc [repo id]
+    (dosync
+     (alter plant-descriptions dissoc @plant-descriptions id)
      )))
 
 ;; Populate garden repo with some data
-(defn create-test-gardens []
+(defn create-test-repo []
   (dosync
    (ref-set gardens {})
-   (ref-set garden-id-cnt 0))
-  (let [garden-repo (InMemoryGardenRepo.)]
-    (.add-garden garden-repo (garden/create-garden "Babylon"))
-    (.add-garden garden-repo (garden/create-garden "Versailles"))
-    garden-repo))
+   (ref-set id-cnt 0))
+  (let [repo (InMemoryGardenRepo.)]
+    (.add-garden repo (garden/create-garden "Babylon"))
+    (.add-garden repo (garden/create-garden "Versailles"))
+    (.add-plant-desc repo (plant-desc/create-plant-desc
+                           "Apiacea" "Daucus" "Carrot" "Early Nantes"))
+    (.add-plant-desc repo (plant-desc/create-plant-desc
+                           "Apiacea" "Daucus" "Carrot" "Amsterdam"))
+    (.add-plant-desc repo (plant-desc/create-plant-desc
+                           "Poaceae" "Zea" "Mays" "Ashworth"))
+    repo))
 
 (defn setup-test-repos []
-  (garden/set-garden-repo nil)
-  (garden/set-garden-repo (create-test-gardens)))
-
-;; Add seedings
-;;(def seeding-1 (seeding/create-seeding (:id babylon)))
-
-
-;; Species repo
-(def species (atom '()))
-(deftype InMemorySpeciesRepo []
-  species/SpeciesRepo
-  (list-species [this] @species)
-  (get-species [this name]
-    (filter #(= name (:name %)) @species))
-  (get-species [this name kind]
-    (filter #(= kind (:kind-name %)) (.get-species this name)))
-  (add-species [this s] (swap! species conj s)))
-
-(defn- create-test-species []
-  (let [species-repo (InMemorySpeciesRepo.)]
-    (.add-species species-repo (test-util/create-test-plant "Carrot" "Early Nantes"))
-    (.add-species species-repo (test-util/create-test-plant "Carrot" "Amsterdam"))
-    (.add-species species-repo (test-util/create-test-plant "Corn" "Ashworth"))
-    species-repo))
-(def test-species-repo (create-test-species))
-
-
+  (let [r (create-test-repo)]
+    (garden/set-garden-repo nil)
+    (garden/set-garden-repo r)
+    (plant-desc/set-plant-desc-repo nil)
+    (plant-desc/set-plant-desc-repo r)))

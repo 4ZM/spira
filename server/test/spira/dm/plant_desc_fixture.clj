@@ -13,14 +13,8 @@
 ;; You should have received a copy of the GNU Affero General Public License
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-(ns spira.dm.test-util
-  (:require [spira.dm.garden :as garden]
-            [spira.dm.species :as species]
-            [spira.dm.seeding :as seeding])
-  (:import [spira.dm.species PlantSpecies])
-  (:import [spira.dm.garden Garden])
-  (:import [spira.dm.seeding Seeding]))
+(ns spira.dm.plant-desc-fixture
+  (:require [clojure.test :refer :all]
+            [spira.dm.plant-desc :refer :all]))
 
-;; Create a plant specifying only name and kind
-(defn create-test-plant [name kind]
-  (PlantSpecies. name "sci" kind))
+(def carrot-early-nantes (create-plant-desc "?" "?" "Carrot" "Early Nantes"))

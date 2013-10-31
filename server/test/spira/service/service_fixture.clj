@@ -14,54 +14,47 @@
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 (ns spira.service.service-fixture
-  (:require [clojure.test :refer :all]
+  (:require [midje.sweet :refer :all]
+            [spira.core.test-util :refer :all]
             [spira.dm.garden :as garden]
             [spira.service.service :refer :all]
-            [spira.dm.test-model :refer :all]
             ))
 
-;; Make sure we setup the dm test repos before each test
-(defn reset-repo-fixture [f]
-  (setup-test-repos)
-  (f))
-(use-fixtures :each reset-repo-fixture)
+(facts "about garden list requests"
+  (fact "garden list request requests gardens"
+    (req-garden-list) => {}
+    (provided (garden/get-garden-repo) => :repo)
+    (provided (garden/list-gardens :repo) => {})))
 
-(deftest test-req-garden-list
-  (testing "Testing response to the gardens request")
-  (let [repo (garden/get-garden-repo)
-        garden-id (.add-garden repo (garden/create-garden "Keukenhof"))]
-    (is (some #(= % "Keukenhof") (req-garden-list)))
-    ))
+(facts "about garden requests"
+  (fact "garden request of non existent garden gives :bad-req"
+    (req-garden 23) => :bad-req
+    (provided (garden/get-garden-repo) => :repo)
+    (provided (garden/get-garden :repo 23) => nil))
+  (fact "garden request of existing garden returns it"
+    (req-garden 23) => :garden
+    (provided (garden/get-garden-repo) => :repo)
+    (provided (garden/get-garden :repo 23) => :garden)))
 
-(deftest test-req-garden
-  (testing "Testing response to the gardens request")
-  (let [repo (garden/get-garden-repo)
-        garden-id (.add-garden repo (garden/create-garden "Keukenhof"))]
-    (is (= "Keukenhof" (:name (req-garden garden-id))))
-    (is (= :bad-req (req-garden 777)))
-    ))
+(facts "about create garden requests"
+  (fact "create request creates a garden"
+    (create-garden {:name "torture"}) => 23
+    (provided (garden/get-garden-repo) => :repo)
+    (provided (garden/add-garden :repo (key-eq? :name "torture")) => 23)))
 
-(deftest test-create-garden
-  (testing "Testing garden creation")
-  (let [repo (garden/get-garden-repo)
-        new-id (create-garden {:name "Keukenhof"})]
-    (is (= "Keukenhof" (:name (-> repo (.get-garden new-id)))))))
+(facts "about update garden requests"
+  (fact "update request updates a garden"
+    (fact "update with invalid id gives :bad-req"
+      (update-garden 23 {}) => :bad-req
+      (provided (garden/get-garden-repo) => :repo)
+      (provided (garden/update-garden :repo 23 anything) => false))))
 
-(deftest test-update-garden
-  (testing "Testing garden modification")
-  (let [repo (garden/get-garden-repo)
-        gid 1
-        g (garden/get-garden repo gid)]
-    (is (not (= "Torture" (:name g))))
-    (update-garden gid {:name "Torture"})
-    (is (= "Torture" (:name (garden/get-garden repo gid))))
-    ))
-
-(deftest test-delete-garden
-  (testing "Testing garden removal")
-  (let [repo (garden/get-garden-repo)
-        gid 1]
-    (is (not (= :bad-req (req-garden gid))))
-    (delete-garden gid)
-    (is (= :bad-req (req-garden gid)))
-    ))
+(facts "about delete garden requests"
+  (fact "delete request deletes a garden"
+    (delete-garden 23) => true
+    (provided (garden/get-garden-repo) => :repo)
+    (provided (garden/delete-garden :repo 23) => true))
+  (fact "delete request with invalid id"
+    (delete-garden 23) => :bad-req
+    (provided (garden/get-garden-repo) => :repo)
+    (provided (garden/delete-garden :repo 23) => false)))

@@ -17,14 +17,6 @@
   (:require [clojure.test :refer :all]
             [spira.dm.garden :refer :all]))
 
-;; Make sure we reset the garden repo before each test
-(defn reset-repo-fixture [f]
-  (set-garden-repo nil)
-  (f))
-(use-fixtures :each reset-repo-fixture)
-
-;; Tests
-
 (deftest test-names
   (testing "Testing the garden identity function")
   (let [babylon (create-garden "babylon")
@@ -35,6 +27,7 @@
 
 (deftest test-repo-locator
   (testing "Test the garden locator")
+  (set-garden-repo nil)
   ;; Must assign before first req
   (is (thrown? AssertionError (get-garden-repo)))
   ;; Then it works

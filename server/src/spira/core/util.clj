@@ -19,8 +19,8 @@
   "Create a GUID string."
   (str (java.util.UUID/randomUUID)))
 
-(defn parse-int [s]
-  "a2i"
+(defn parse-uint [s]
+  "a2uint"
   (Integer. (re-find  #"\d+" s )))
 
 (defn find-first [f coll]

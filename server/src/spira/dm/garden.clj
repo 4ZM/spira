@@ -19,21 +19,24 @@
 
 ;; Garden factory
 (defn create-garden [name]
-  (Garden. name {}))
+  (Garden. name []))
 
 ;; Garden repository
 (defprotocol GardenRepo
   "Repository of Gardens. Supports CRUD style operations."
   (list-gardens [repo]
-    "Get a seq of all gardens in the repo.")
+    "Get a seq of all gardens in the repo. {:id x :name somename}")
   (get-garden [repo id]
-    "Get a specific garden by it's id.")
+    "Get a specific garden by it's id or nil if not found")
   (add-garden [repo garden]
-    "Add a new garden to the repository. The added garden's id is returned.")
+    "Add a new garden to the repository. The added garden's id is
+    returned.")
   (update-garden [repo id garden]
-    "Modify the garden identified by id.")
+    "Modify the garden identified by id. Return true if the garden was
+    successfully updated.")
   (delete-garden [repo id]
-    "Remove a garden from a repository"))
+    "Remove a garden from a repository. Return true if the garden was
+    successfully removed."))
 
 ;; The garden repo singleton
 (def garden-repo (atom nil))

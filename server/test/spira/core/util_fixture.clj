@@ -15,6 +15,7 @@
 
 (ns spira.core.util-fixture
   (:require [clojure.test :refer :all]
+            [midje.sweet :refer :all]
             [spira.core.util :refer :all]))
 
 (deftest test-unique-uuid
@@ -32,3 +33,11 @@
   (is (= 2 (find-first even? '(2 3 5 7))))
   (is (= 4 (find-first even? '(1 4 5 7))))
   (is (= 8 (find-first even? '(1 3 5 8)))))
+
+(facts "about a2i"
+  (fact "converts string to int"
+    (parse-uint "23") => 23
+    (parse-uint "-23") => 23
+    (parse-uint "0") => 0
+;;    (parse-uint "X") => throws
+    ))

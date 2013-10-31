@@ -22,31 +22,31 @@
             [cheshire.core :as json]
             [compojure.route :as route]
             [compojure.handler :as handler]
-            [compojure.response :as response]))
+            [compojure.response :as response]
+            ))
 
-;; Change set this to a propper repo
 (defn req-garden [id]
   "Respond to /garden/id GET request"
-  (let [g (.get-garden (garden/get-garden-repo) id)]
-         (if (nil? g) :bad-req g)))
+  (let [r (garden/get-garden-repo)]
+    (or (-> r (garden/get-garden id)) :bad-req)))
 
 (defn req-garden-list []
   "Respond to /garden GET request"
-  (map :name (vals (.list-gardens (garden/get-garden-repo)))))
+  (-> (garden/get-garden-repo) (garden/list-gardens)))
 
 (defn create-garden [params]
   "Create garden request"
   (let [r (garden/get-garden-repo)
         new-garden (garden/create-garden (:name params))]
-    (.add-garden r new-garden)))
+    (-> r (garden/add-garden new-garden))))
 
 (defn update-garden [id params]
   "Update garden request"
   (let [r (garden/get-garden-repo)
         new-garden (garden/create-garden (:name params))]
-    (.update-garden r id new-garden)))
+    (or (-> r (garden/update-garden id new-garden)) :bad-req)))
 
 (defn delete-garden [id]
   "Delete garden request"
   (let [r (garden/get-garden-repo)]
-    (.delete-garden r id)))
+    (or (-> r (garden/delete-garden id)) :bad-req)))

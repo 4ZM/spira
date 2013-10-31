@@ -18,14 +18,10 @@
 
 ;; A seeding is a plant or a collection of plats treated as a unit
 ;; in the calendar context.
-(defrecord Seeding
-    [
-     guid
-     species-id
-     ])
+(defrecord Seeding [id species-desc])
 
 ;; Seeding factory
-(defn create-seeding [species-id]
-  (Seeding. (util/uuid) species-id))
+(defn create-seeding [species-desc]
+  (Seeding. (util/uuid) species-desc))
 
 

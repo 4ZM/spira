@@ -13,24 +13,10 @@
 ;; You should have received a copy of the GNU Affero General Public License
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-(ns spira.dm.species-fixture
-  (:require [clojure.test :refer :all]
-            [spira.dm.test-util :as util]
-            [spira.dm.species :refer :all])
-  (:import [spira.dm.species PlantSpecies]))
+(ns spira.core.test-util
+  (:require [midje.sweet :refer :all]))
 
-(def carrot-early-nantes (util/create-test-plant "Carrot" "Early Nantes"))
-(def carrot-amsterdam (util/create-test-plant "Carrot" "Amsterdam"))
-(def corn-ashworth (util/create-test-plant "Corn" "Ashworth"))
+;; Utility functions for the tests
 
-(deftest test-id-func
-  (testing "PlantSpecies id func."
-    (is (= (id carrot-early-nantes) (id carrot-early-nantes)))
-    (is (not (= (id carrot-early-nantes) (id carrot-amsterdam))))
-    (is (not (= (id carrot-early-nantes) (id corn-ashworth))))
-    ))
-
-
-
-
-
+(defchecker key-eq? [key expected]
+  (checker [actual] (= (key actual) expected)))

@@ -15,16 +15,9 @@
 
 (ns spira.dm.seeding-fixture
   (:require [clojure.test :refer :all]
-            [spira.dm.test-util :as util]
-            [spira.dm.garden :as garden]
-            [spira.dm.species :as species])
-  (:import [spira.dm.species PlantSpecies])
-  (:use spira.dm.seeding))
-
-(def carrot (util/create-test-plant "Carrot" "Early Nantes"))
-(def corn (util/create-test-plant "Corn" "Ashworth"))
+            [spira.dm.seeding :refer :all]))
 
 (deftest seeding-creation
-  (testing "Test seeding creation"
-    (is (not (= (create-seeding carrot) (create-seeding carrot))))
-    (is (not (= (create-seeding carrot) (create-seeding corn))))))
+   (testing "Test seeding creation"
+     (is (not (= (create-seeding :carrot) (create-seeding :carrot))))
+     ))
