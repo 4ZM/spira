@@ -13,11 +13,11 @@
 ;; You should have received a copy of the GNU Affero General Public License
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-(ns spira.service.plant-desc-service-fixture
+(ns spira.services.plant-desc-service-fixture
   (:require [midje.sweet :refer :all]
             [spira.core.test-util :refer :all]
             [spira.dm.plant-desc :as pd]
-            [spira.service.plant-desc-service :refer :all]
+            [spira.services.plant-desc-service :refer :all]
             ))
 
 (facts "about plant description list requests"

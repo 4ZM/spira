@@ -13,12 +13,12 @@
 ;; You should have received a copy of the GNU Affero General Public License
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-(ns spira.service.routes-fixture
+(ns spira.rest-adapter.routes-fixture
   (:require [midje.sweet :refer :all]
             [spira.dm.test-model :refer :all]
-            [spira.service.garden-service :as gs]
-            [spira.service.plant-desc-service :as pds]
-            [spira.service.routes :refer :all]))
+            [spira.services.garden-service :as gs]
+            [spira.services.plant-desc-service :as pds]
+            [spira.rest-adapter.routes :refer :all]))
 
 (defn- test-req [method uri & params]
   {:request-method method

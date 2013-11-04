@@ -13,7 +13,7 @@
 ;; You should have received a copy of the GNU Affero General Public License
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-(ns spira.service.plant-desc-service
+(ns spira.services.plant-desc-service
   (:require [spira.dm.plant-desc :as pd]))
 
 (defn req-plant-desc [id]

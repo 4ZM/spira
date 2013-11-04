@@ -13,11 +13,10 @@
 ;; You should have received a copy of the GNU Affero General Public License
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-(ns spira.service.routes
+(ns spira.rest-adapter.routes
   (:require [spira.core.util :as util]
-            [spira.service.garden-service :as gs]
-            [spira.service.plant-desc-service :as pds]
-            [ring.middleware.params :refer [wrap-params]]
+            [spira.services.garden-service :as gs]
+            [spira.services.plant-desc-service :as pds]
             [cheshire.core :as json]
             [compojure.core :refer :all]
             [compojure.route :as route]

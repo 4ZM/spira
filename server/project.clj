@@ -16,5 +16,5 @@
 
   :plugins [[lein-ring "0.7.1"]]
 
-  :ring {:handler spira.service.routes/app}
+  :ring {:handler spira.rest-adapter.routes/app}
 )
