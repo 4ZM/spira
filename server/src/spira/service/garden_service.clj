@@ -25,12 +25,12 @@
             ))
 
 (defn req-garden [id]
-  "Respond to /garden/id GET request"
+  "Respond to garden with id request"
   (let [r (garden/get-garden-repo)]
     (or (-> r (garden/get-garden id)) :bad-req)))
 
 (defn req-garden-list []
-  "Respond to /garden GET request"
+  "Respond to garden list request"
   (-> (garden/get-garden-repo) (garden/list-gardens)))
 
 (defn create-garden [params]

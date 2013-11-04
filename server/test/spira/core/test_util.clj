@@ -18,5 +18,7 @@
 
 ;; Utility functions for the tests
 
-(defchecker key-eq? [key expected]
-  (checker [actual] (= (key actual) expected)))
+(defchecker mapped-eq? [func expected]
+  "Apply the func and compare return value with expeced. Hint: func
+   can be keyword."
+  (checker [actual] (= (func actual) expected)))

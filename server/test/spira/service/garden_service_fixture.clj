@@ -40,7 +40,7 @@
   (fact "create request creates a garden"
     (create-garden {:name "torture"}) => 23
     (provided (garden/get-garden-repo) => :repo)
-    (provided (garden/add-garden :repo (key-eq? :name "torture")) => 23)))
+    (provided (garden/add-garden :repo (mapped-eq? :name "torture")) => 23)))
 
 (facts "about update garden requests"
   (fact "update request updates a garden"
