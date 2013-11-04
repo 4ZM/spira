@@ -13,7 +13,7 @@
 ;; You should have received a copy of the GNU Affero General Public License
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-(ns spira.service.service
+(ns spira.service.garden-service
   (:require [compojure.core :refer :all]
             [spira.dm.garden :as garden]
             [spira.dm.test-model :refer :all]

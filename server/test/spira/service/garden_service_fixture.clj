@@ -13,11 +13,11 @@
 ;; You should have received a copy of the GNU Affero General Public License
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-(ns spira.service.service-fixture
+(ns spira.service.garden-service-fixture
   (:require [midje.sweet :refer :all]
             [spira.core.test-util :refer :all]
             [spira.dm.garden :as garden]
-            [spira.service.service :refer :all]
+            [spira.service.garden-service :refer :all]
             ))
 
 (facts "about garden list requests"

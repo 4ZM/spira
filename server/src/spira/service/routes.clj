@@ -15,7 +15,7 @@
 
 (ns spira.service.routes
   (:require [spira.core.util :as util]
-            [spira.service.service :as service]
+            [spira.service.garden-service :as gs]
             [ring.middleware.params :refer [wrap-params]]
             [cheshire.core :as json]
             [compojure.core :refer :all]
@@ -49,15 +49,15 @@
 
 (defroutes app-routes
   (GET "/api/garden/:id" [id]
-       (json-response (service/req-garden (util/parse-uint id))))
+       (json-response (gs/req-garden (util/parse-uint id))))
   (GET "/api/garden" []
-       (json-response (service/req-garden-list)))
+       (json-response (gs/req-garden-list)))
   (POST "/api/garden" [& params]
-        (json-response (service/create-garden params)))
+        (json-response (gs/create-garden params)))
   (PUT "/api/garden/:id" [id & params]
-       (json-response (service/update-garden (util/parse-uint id) params)))
+       (json-response (gs/update-garden (util/parse-uint id) params)))
   (DELETE "/api/garden/:id" [id]
-          (json-response (service/delete-garden (util/parse-uint id))))
+          (json-response (gs/delete-garden (util/parse-uint id))))
   (route/not-found "Not Found"))
 
 (def app
