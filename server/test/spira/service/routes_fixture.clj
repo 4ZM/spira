@@ -17,6 +17,7 @@
   (:require [midje.sweet :refer :all]
             [spira.dm.test-model :refer :all]
             [spira.service.garden-service :as gs]
+            [spira.service.plant-desc-service :as pds]
             [spira.service.routes :refer :all]))
 
 (defn- test-req [method uri & params]
@@ -32,6 +33,8 @@
   (fact "Invalid routes give error status"
     (:status (app-routes (test-req :get "/api/is/not/a/valid/route"))) =>
     (:not-found http-status)))
+
+;; api/garden routes ---
 
 (facts "about list requests"
   (fact "/api/garden requests list"
@@ -75,6 +78,51 @@
     (let [req (test-req :delete "/api/garden/1")]
       (:status (app-routes req)) => (:ok http-status)
       (provided (gs/delete-garden 1) =>
-                (test-resp :ok) :times 1)
-      )))
+                (test-resp :ok) :times 1))))
 
+;; api/plantdesc routes ---
+
+
+(facts "about list requests"
+  (fact "/api/plantdesc requests list"
+    (let [req (test-req :get "/api/plantdesc")]
+      (:status (app-routes req)) => (:ok http-status)
+      (provided (pds/req-plant-desc-list) => (test-resp :ok []) :times 1))))
+
+(facts "about plant description get requests"
+  (fact "/api/plantdesc/id gets plant description"
+    (:status (app-routes (test-req :get "/api/plantdesc/1"))) => (:ok http-status)
+    (provided (pds/req-plant-desc 1) => (test-resp :ok {}) :times 1))
+  (fact "/api/plantdesc/id with wrong id reports error"
+    (:status (app-routes (test-req :get "/api/plantdesc/1"))) => (:bad-req http-status)
+    (provided (pds/req-plant-desc 1) => (test-resp :bad-req) :times 1)))
+
+(facts "about plant description create requests"
+  (fact "/api/plantdesc post creates plant description"
+    (let [params {:family "f" :genus "g" :species "s" :kind "k"}
+          req (test-req :post "/api/plantdesc" params)]
+      (:status (app-routes req)) => (:created http-status)
+      (provided (pds/create-plant-desc params) =>
+                (test-resp :created {:id 1}) :times 1)))
+
+  (fact "/api/plantdesc post bad data gives error"
+    (let [bad-params {:wierd "param"}
+          req (test-req :post "/api/plantdesc" bad-params)]
+      (:status (app-routes req)) => (:bad-req http-status)
+      (provided (pds/create-plant-desc bad-params) =>
+                (test-resp :bad-req) :times 1))))
+
+(facts "about plant description update requests"
+  (fact "/api/plantdesc/id put request updates"
+    (let [params {:family "f" :genus "g" :species "s" :kind "k"}
+          req (test-req :put "/api/plantdesc/1" params)]
+      (:status (app-routes req)) => (:ok http-status)
+      (provided (pds/update-plant-desc 1 params) =>
+                (test-resp :ok) :times 1))))
+
+(facts "about plant description delete requests"
+  (fact "/api/plantdesc/id delete request deletes"
+    (let [req (test-req :delete "/api/plantdesc/1")]
+      (:status (app-routes req)) => (:ok http-status)
+      (provided (pds/delete-plant-desc 1) =>
+                (test-resp :ok) :times 1))))

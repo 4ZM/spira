@@ -16,6 +16,7 @@
 (ns spira.service.routes
   (:require [spira.core.util :as util]
             [spira.service.garden-service :as gs]
+            [spira.service.plant-desc-service :as pds]
             [ring.middleware.params :refer [wrap-params]]
             [cheshire.core :as json]
             [compojure.core :refer :all]
@@ -48,6 +49,8 @@
 ;; DELETE    /api/foo/<id>    -> delete record
 
 (defroutes app-routes
+
+  ;; /api/garden
   (GET "/api/garden/:id" [id]
        (json-response (gs/req-garden (util/parse-uint id))))
   (GET "/api/garden" []
@@ -58,7 +61,22 @@
        (json-response (gs/update-garden (util/parse-uint id) params)))
   (DELETE "/api/garden/:id" [id]
           (json-response (gs/delete-garden (util/parse-uint id))))
+
+  ;; /api/plantdesc
+  (GET "/api/plantdesc/:id" [id]
+       (json-response (pds/req-plant-desc (util/parse-uint id))))
+  (GET "/api/plantdesc" []
+       (json-response (pds/req-plant-desc-list)))
+  (POST "/api/plantdesc" [& params]
+        (json-response (pds/create-plant-desc params)))
+  (PUT "/api/plantdesc/:id" [id & params]
+       (json-response (pds/update-plant-desc (util/parse-uint id) params)))
+  (DELETE "/api/plantdesc/:id" [id]
+          (json-response (pds/delete-plant-desc (util/parse-uint id))))
+
+  ;; fallback
   (route/not-found "Not Found"))
+
 
 (def app
   (-> (handler/site app-routes)))
