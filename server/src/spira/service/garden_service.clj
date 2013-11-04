@@ -14,15 +14,7 @@
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 (ns spira.service.garden-service
-  (:require [compojure.core :refer :all]
-            [spira.dm.garden :as garden]
-            [spira.dm.test-model :refer :all]
-            [hiccup.middleware :refer [wrap-base-url]]
-            [cheshire.core :as json]
-            [compojure.route :as route]
-            [compojure.handler :as handler]
-            [compojure.response :as response]
-            ))
+  (:require [spira.dm.garden :as garden]))
 
 (defn req-garden [id]
   "Respond to garden with id request"
