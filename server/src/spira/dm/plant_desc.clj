@@ -25,18 +25,18 @@
 ;; Plant repository
 (defprotocol PlantDescriptionRepo
   "Repository of plant information. Supports CRUD style operations."
-  (list-descriptions [repo]
+  (list-descriptions [_]
     "Get a seq of all plants in the repo. {:id x :species x :kind y}")
-  (get-plant-desc [repo id]
+  (get-plant-desc [_ id]
     "Get a specific plant description by it's id or nil if not
     found.")
-  (add-plant-desc [repo desc]
+  (add-plant-desc [_ desc]
     "Add a new descriptionn to the repository. The added
     descriptions's id is returned.")
-  (update-plant-desc [repo id desc]
+  (update-plant-desc [_ id desc]
     "Modify the description identified by id. Return true if the
     description was successfully updated.")
-  (delete-plant-desc [repo id]
+  (delete-plant-desc [_ id]
     "Remove a descriptions from the repository. Return true if the
     description was successfully removed."))
 

@@ -36,17 +36,17 @@
 ;; Garden repository
 (defprotocol GardenRepo
   "Repository of Gardens. Supports CRUD style operations."
-  (list-gardens [repo]
+  (list-gardens [_]
     "Get a seq of all gardens in the repo. {:id x :name somename}")
-  (get-garden [repo id]
+  (get-garden [_ id]
     "Get a specific garden by it's id or nil if not found")
-  (add-garden [repo garden]
+  (add-garden [_ garden]
     "Add a new garden to the repository. The added garden's id is
     returned.")
-  (update-garden [repo id garden]
+  (update-garden [_ id garden]
     "Modify the garden identified by id. Return true if the garden was
     successfully updated.")
-  (delete-garden [repo id]
+  (delete-garden [_ id]
     "Remove a garden from a repository. Return true if the garden was
     successfully removed."))
 
