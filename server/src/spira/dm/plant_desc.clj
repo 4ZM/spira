@@ -39,12 +39,3 @@
   (delete-plant-desc [_ id]
     "Remove a descriptions from the repository. Return true if the
     description was successfully removed."))
-
-;; The plant description repo singleton
-(def plant-desc-repo (atom nil))
-(defn get-plant-desc-repo []
-  (assert @plant-desc-repo "Request before initialization")
-  @plant-desc-repo)
-(defn set-plant-desc-repo [new]
-  (assert (or (nil? new) (nil? @plant-desc-repo)) "Can't reset to anything but nil")
-  (reset! plant-desc-repo new))

@@ -15,29 +15,15 @@
 
 (ns spira.rest-adapter.routes
   (:require [spira.core.util :as util]
-            [spira.services.garden-service :as gs]
-            [spira.services.plant-desc-service :as pds]
-            [cheshire.core :as json]
+            [spira.rest-adapter.garden-service :as gs]
+            [spira.rest-adapter.plant-desc-service :as pds]
+            [spira.dm.in-memory-repo :as memrepo]
+            [spira.rest-adapter.util :refer :all]
             [compojure.core :refer :all]
             [compojure.route :as route]
             [compojure.handler :as handler]
             [compojure.response :as response]))
 
-(def http-status
-  {:ok 200
-   :created 201
-   :bad-req 400
-   :not-found 404
-   })
-
-(defn json-response [{status :status data :data}]
-  "Create a json HTTP response from a status keyword and a map"
-  (let [status-code (status http-status)
-        resp {:status status-code
-              :headers {"Content-Type" "application/json"}}]
-    (if (nil? data)
-      resp
-      (assoc resp :body (json/generate-string data)))))
 
 ;; The CRUD REST api follows the following schema:
 ;;
@@ -47,35 +33,55 @@
 ;; PUT       /api/foo/<id>    -> update record
 ;; DELETE    /api/foo/<id>    -> delete record
 
-(defroutes app-routes
+(defn app-routes [state]
+  (compojure.core/routes
 
-  ;; /api/garden
-  (GET "/api/garden/:id" [id]
-       (json-response (gs/req-garden (util/parse-uint id))))
-  (GET "/api/garden" []
-       (json-response (gs/req-garden-list)))
-  (POST "/api/garden" [& params]
-        (json-response (gs/create-garden params)))
-  (PUT "/api/garden/:id" [id & params]
-       (json-response (gs/update-garden (util/parse-uint id) params)))
-  (DELETE "/api/garden/:id" [id]
-          (json-response (gs/delete-garden (util/parse-uint id))))
+   ;; /api/garden
+   (GET "/api/garden/:id" [id]
+        (json-response
+         (gs/req-garden (:garden state) (util/parse-uint id))))
+   (GET "/api/garden" []
+        (json-response
+         (gs/req-garden-list (:garden state))))
+   (POST "/api/garden" [& params]
+         (json-response
+          (gs/create-garden (:garden state) params)))
+   (PUT "/api/garden/:id" [id & params]
+        (json-response
+         (gs/update-garden (:garden state) (util/parse-uint id) params)))
+   (DELETE "/api/garden/:id" [id]
+           (json-response
+            (gs/delete-garden (:garden state) (util/parse-uint id))))
 
-  ;; /api/plantdesc
-  (GET "/api/plantdesc/:id" [id]
-       (json-response (pds/req-plant-desc (util/parse-uint id))))
-  (GET "/api/plantdesc" []
-       (json-response (pds/req-plant-desc-list)))
-  (POST "/api/plantdesc" [& params]
-        (json-response (pds/create-plant-desc params)))
-  (PUT "/api/plantdesc/:id" [id & params]
-       (json-response (pds/update-plant-desc (util/parse-uint id) params)))
-  (DELETE "/api/plantdesc/:id" [id]
-          (json-response (pds/delete-plant-desc (util/parse-uint id))))
+   ;; /api/plantdesc
+   (GET "/api/plantdesc/:id" [id]
+         (json-response
+          (pds/req-plant-desc (:plant-desc state) (util/parse-uint id))))
+   (GET "/api/plantdesc" []
+        (json-response
+         (pds/req-plant-desc-list (:plant-desc state))))
+   (POST "/api/plantdesc" [& params]
+         (json-response
+          (pds/create-plant-desc (:plant-desc state) params)))
+   (PUT "/api/plantdesc/:id" [id & params]
+        (json-response
+         (pds/update-plant-desc (:plant-desc state) (util/parse-uint id) params)))
+   (DELETE "/api/plantdesc/:id" [id]
+           (json-response
+            (pds/delete-plant-desc (:plant-desc state) (util/parse-uint id))))
 
-  ;; fallback
-  (route/not-found "Not Found"))
+   ;; fallback
+   (route/not-found "Not Found")
+  ))
 
+(defn create-app-state []
+  {:garden (memrepo/memory-garden-repo)
+   :plant-desc (memrepo/memory-plant-description-repo)})
 
 (def app
-  (-> (handler/api app-routes)))
+  (handler/api (app-routes (create-app-state)))
+;;  (-> (create-app-state)
+  ;;    app-routes
+    ;;  handler/api
+      )
+

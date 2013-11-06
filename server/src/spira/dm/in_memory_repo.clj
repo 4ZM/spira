@@ -20,47 +20,44 @@
             [spira.core.util :as util]))
 
 
-(def id-cnt (ref 0))
-(def gardens (ref {}))
-(def plant-descriptions (ref {}))
-
-(defn reset-repo! []
-  (dosync
-   (ref-set id-cnt 0)
-   (ref-set gardens {})
-   (ref-set plant-descriptions {})
-   ))
-
-(defrecord InMemoryRepo []
+(defrecord MemoryGardenRepo [id-cnt gardens]
   garden/GardenRepo
-  (list-gardens [this] (for [[id g] @gardens] {:id id :name (:name g)}))
-  (get-garden [this id] (get @gardens id))
-  (add-garden [this g]
+  (list-gardens [_] (for [[id g] @gardens] {:id id :name (:name g)}))
+  (get-garden [_ id] (get @gardens id))
+  (add-garden [_ g]
     (dosync
      (alter id-cnt inc)
      (alter gardens assoc @id-cnt g))
     @id-cnt)
-  (update-garden [repo id g]
+  (update-garden [_ id g]
     (dosync
      (alter gardens assoc id g)))
-  (delete-garden [repo id]
+  (delete-garden [_ id]
     (dosync
-     (alter gardens dissoc @gardens id)
-     ))
+     (alter gardens dissoc @gardens id))))
+
+(defn memory-garden-repo []
+  (->MemoryGardenRepo (ref 0) (ref {})))
+
+(defrecord MemoryPlantDescriptionRepo [id-cnt plant-descriptions]
   plant-desc/PlantDescriptionRepo
-  (list-descriptions [repo]
+  (list-descriptions [_]
     (for [[id d] @plant-descriptions] {:id id :kind (:kind (:name d))}))
-  (get-plant-desc [repo id]
+  (get-plant-desc [_ id]
     (get @plant-descriptions id))
-  (add-plant-desc [repo desc]
+  (add-plant-desc [_ desc]
     (dosync
      (alter id-cnt inc)
      (alter plant-descriptions assoc @id-cnt desc))
     @id-cnt)
-  (update-plant-desc [repo id desc]
+  (update-plant-desc [_ id desc]
     (dosync
      (alter plant-descriptions assoc id desc)))
-  (delete-plant-desc [repo id]
+  (delete-plant-desc [_ id]
     (dosync
      (alter plant-descriptions dissoc @plant-descriptions id)
      )))
+
+(defn memory-plant-description-repo []
+  (->MemoryPlantDescriptionRepo (ref 0) (ref {})))
+

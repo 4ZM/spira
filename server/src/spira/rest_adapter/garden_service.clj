@@ -13,31 +13,31 @@
 ;; You should have received a copy of the GNU Affero General Public License
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-(ns spira.services.garden-service
-  (:require [spira.dm.garden :as garden]))
+(ns spira.rest-adapter.garden-service
+  (:require [spira.dm.garden :as garden]
+            [spira.rest-adapter.util :refer :all]))
 
-(defn req-garden [id]
+(defn req-garden [repo id]
   "Respond to garden with id request"
-  (let [r (garden/get-garden-repo)]
-    (or (-> r (garden/get-garden id)) :bad-req)))
+  (let [res (-> repo (garden/get-garden id))]
+    (if (nil? res) (response :bad-req) (response :ok res))))
 
-(defn req-garden-list []
+(defn req-garden-list [repo]
   "Respond to garden list request"
-  (-> (garden/get-garden-repo) (garden/list-gardens)))
+  (response :ok (-> repo (garden/list-gardens))))
 
-(defn create-garden [params]
+(defn create-garden [repo params]
   "Create garden request"
-  (let [r (garden/get-garden-repo)
-        new-garden (garden/create-garden (:name params))]
-    (-> r (garden/add-garden new-garden))))
+  (let [new-garden (garden/create-garden (:name params))]
+    (response :created (-> repo (garden/add-garden new-garden)))))
 
-(defn update-garden [id params]
+(defn update-garden [repo id params]
   "Update garden request"
-  (let [r (garden/get-garden-repo)
-        new-garden (garden/create-garden (:name params))]
-    (or (-> r (garden/update-garden id new-garden)) :bad-req)))
+  (let [new-garden (garden/create-garden (:name params))
+        res (-> repo (garden/update-garden id new-garden))]
+    (if res (response :ok res) (response :bad-req))))
 
-(defn delete-garden [id]
+(defn delete-garden [repo id]
   "Delete garden request"
-  (let [r (garden/get-garden-repo)]
-    (or (-> r (garden/delete-garden id)) :bad-req)))
+  (let [res (-> repo (garden/delete-garden id))]
+    (if res (response :ok) (response :bad-req))))

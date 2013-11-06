@@ -13,14 +13,12 @@
 ;; You should have received a copy of the GNU Affero General Public License
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-(ns spira.dm.garden-fixture
-  (:require [clojure.test :refer :all]
-            [spira.dm.garden :refer :all]))
+(ns spira.rest-adapter.util-fixture
+  (:require [midje.sweet :refer :all]
+            [spira.rest-adapter.util :refer :all]))
 
-(deftest test-names
-  (testing "Testing the garden identity function")
-  (let [babylon (create-garden "babylon")
-        keukenhof (create-garden "Keukenhof")]
-    (is (= (.name babylon) (.name babylon)))
-    (is (not (= (.name babylon) (.name keukenhof)))))
-    )
+(facts "about responses"
+  (fact "status only response"
+    (response :fu) => {:status :fu})
+  (fact "status and data response"
+    (response :fu :bar) => {:status :fu :data :bar}))

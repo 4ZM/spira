@@ -13,14 +13,23 @@
 ;; You should have received a copy of the GNU Affero General Public License
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-(ns spira.dm.garden-fixture
-  (:require [clojure.test :refer :all]
-            [spira.dm.garden :refer :all]))
+(ns spira.rest-adapter.util
+  (:require [cheshire.core :as json]))
 
-(deftest test-names
-  (testing "Testing the garden identity function")
-  (let [babylon (create-garden "babylon")
-        keukenhof (create-garden "Keukenhof")]
-    (is (= (.name babylon) (.name babylon)))
-    (is (not (= (.name babylon) (.name keukenhof)))))
-    )
+(def http-status
+  {:ok 200
+   :created 201
+   :bad-req 400
+   :not-found 404
+   })
+
+(defn response [status & data]
+  "Helper to create service responses"
+  (if (nil? data) {:status status} {:status status :data (first data)}))
+
+(defn json-response [{status :status data :data}]
+  "Create a json HTTP response from a status keyword and a map"
+  (let [status-code (status http-status)
+        resp {:status status-code
+              :headers {"Content-Type" "application/json"}}]
+    (if (nil? data) resp (assoc resp :body (json/generate-string data)))))

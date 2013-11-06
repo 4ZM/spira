@@ -50,11 +50,3 @@
     "Remove a garden from a repository. Return true if the garden was
     successfully removed."))
 
-;; The garden repo singleton
-(def garden-repo (atom nil))
-(defn get-garden-repo []
-  (assert @garden-repo "Request before initialization")
-  @garden-repo)
-(defn set-garden-repo [new]
-  (assert (or (nil? new) (nil? @garden-repo)) "Can't reset to anything but nil")
-  (reset! garden-repo new))

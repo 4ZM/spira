@@ -13,37 +13,37 @@
 ;; You should have received a copy of the GNU Affero General Public License
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-(ns spira.services.plant-desc-service
-  (:require [spira.dm.plant-desc :as pd]))
+(ns spira.rest-adapter.plant-desc-service
+  (:require [spira.dm.plant-desc :as pd]
+            [spira.rest-adapter.util :refer :all]))
 
-(defn req-plant-desc [id]
+(defn req-plant-desc [repo id]
   "Respond to plant desc with id request"
-  (let [r (pd/get-plant-desc-repo)]
-    (or (-> r (pd/get-plant-desc id)) :bad-req)))
+  (let [res (-> repo (pd/get-plant-desc id))]
+    (if (nil? res) (response :bad-req) (response :ok res))))
 
-(defn req-plant-desc-list []
+(defn req-plant-desc-list [repo]
   "Respond to plant desc list request"
-  (-> (pd/get-plant-desc-repo) (pd/list-descriptions)))
+  (response :ok (-> repo (pd/list-descriptions))))
 
-(defn create-plant-desc [params]
+(defn create-plant-desc [repo params]
   "Create plant desc request"
-  (let [r (pd/get-plant-desc-repo)
-        new-desc (pd/create-plant-desc (:family params)
+  (let [new-desc (pd/create-plant-desc (:family params)
                                        (:genus params)
                                        (:species params)
                                        (:kind params))]
-    (-> r (pd/add-plant-desc new-desc))))
+    (response :created (-> repo (pd/add-plant-desc new-desc)))))
 
-(defn update-plant-desc [id params]
+(defn update-plant-desc [repo id params]
   "Update plant desc request"
-  (let [r (pd/get-plant-desc-repo)
-        new-desc (pd/create-plant-desc (:family params)
+  (let [new-desc (pd/create-plant-desc (:family params)
                                        (:genus params)
                                        (:species params)
-                                       (:kind params))]
-    (or (-> r (pd/update-plant-desc id new-desc)) :bad-req)))
+                                       (:kind params))
+        success (-> repo (pd/update-plant-desc id new-desc))]
+    (response (if success :ok :bad-req))))
 
-(defn delete-plant-desc [id]
+(defn delete-plant-desc [repo id]
   "Delete plant desc  request"
-  (let [r (pd/get-plant-desc-repo)]
-    (or (-> r (pd/delete-plant-desc id)) :bad-req)))
+  (let [success (-> repo (pd/delete-plant-desc id))]
+    (response (if success :ok :bad-req))))
