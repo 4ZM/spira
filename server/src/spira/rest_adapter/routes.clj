@@ -18,6 +18,7 @@
             [spira.rest-adapter.garden-service :as gs]
             [spira.rest-adapter.plant-desc-service :as pds]
             [spira.dm.in-memory-repo :as memrepo]
+            [spira.core.system :as system]
             [spira.rest-adapter.util :refer :all]
             [compojure.core :refer :all]
             [compojure.route :as route]
@@ -39,49 +40,42 @@
    ;; /api/garden
    (GET "/api/garden/:id" [id]
         (json-response
-         (gs/req-garden (:garden state) (util/parse-uint id))))
+         (gs/req-garden (:garden-repo state) (util/parse-uint id))))
    (GET "/api/garden" []
         (json-response
-         (gs/req-garden-list (:garden state))))
+         (gs/req-garden-list (:garden-repo state))))
    (POST "/api/garden" [& params]
          (json-response
-          (gs/create-garden (:garden state) params)))
+          (gs/create-garden (:garden-repo state) params)))
    (PUT "/api/garden/:id" [id & params]
         (json-response
-         (gs/update-garden (:garden state) (util/parse-uint id) params)))
+         (gs/update-garden (:garden-repo state) (util/parse-uint id) params)))
    (DELETE "/api/garden/:id" [id]
            (json-response
-            (gs/delete-garden (:garden state) (util/parse-uint id))))
+            (gs/delete-garden (:garden-repo state) (util/parse-uint id))))
 
    ;; /api/plantdesc
    (GET "/api/plantdesc/:id" [id]
          (json-response
-          (pds/req-plant-desc (:plant-desc state) (util/parse-uint id))))
+          (pds/req-plant-desc (:plant-desc-repo state) (util/parse-uint id))))
    (GET "/api/plantdesc" []
         (json-response
-         (pds/req-plant-desc-list (:plant-desc state))))
+         (pds/req-plant-desc-list (:plant-desc-repo state))))
    (POST "/api/plantdesc" [& params]
          (json-response
-          (pds/create-plant-desc (:plant-desc state) params)))
+          (pds/create-plant-desc (:plant-desc-repo state) params)))
    (PUT "/api/plantdesc/:id" [id & params]
         (json-response
-         (pds/update-plant-desc (:plant-desc state) (util/parse-uint id) params)))
+         (pds/update-plant-desc (:plant-desc-repo state) (util/parse-uint id) params)))
    (DELETE "/api/plantdesc/:id" [id]
            (json-response
-            (pds/delete-plant-desc (:plant-desc state) (util/parse-uint id))))
+            (pds/delete-plant-desc (:plant-desc-repo state) (util/parse-uint id))))
 
    ;; fallback
    (route/not-found "Not Found")
   ))
 
-(defn create-app-state []
-  {:garden (memrepo/memory-garden-repo)
-   :plant-desc (memrepo/memory-plant-description-repo)})
-
 (def app
-  (handler/api (app-routes (create-app-state)))
-;;  (-> (create-app-state)
-  ;;    app-routes
-    ;;  handler/api
-      )
+  (handler/api (app-routes (system/dev-system)))
+  )
 
