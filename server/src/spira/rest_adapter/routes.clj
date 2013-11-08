@@ -34,42 +34,42 @@
 ;; PUT       /api/foo/<id>    -> update record
 ;; DELETE    /api/foo/<id>    -> delete record
 
-(defn app-routes [state]
+(defn app-routes [{garden-repo :garden-repo plant-desc-repo :plant-desc-repo}]
   (compojure.core/routes
 
    ;; /api/garden
    (GET "/api/garden/:id" [id]
         (json-response
-         (gs/req-garden (:garden-repo state) (util/parse-uint id))))
+         (gs/req-garden garden-repo (util/parse-uint id))))
    (GET "/api/garden" []
         (json-response
-         (gs/req-garden-list (:garden-repo state))))
+         (gs/req-garden-list garden-repo)))
    (POST "/api/garden" [& params]
          (json-response
-          (gs/create-garden (:garden-repo state) params)))
+          (gs/create-garden garden-repo params)))
    (PUT "/api/garden/:id" [id & params]
         (json-response
-         (gs/update-garden (:garden-repo state) (util/parse-uint id) params)))
+         (gs/update-garden garden-repo (util/parse-uint id) params)))
    (DELETE "/api/garden/:id" [id]
            (json-response
-            (gs/delete-garden (:garden-repo state) (util/parse-uint id))))
+            (gs/delete-garden garden-repo (util/parse-uint id))))
 
    ;; /api/plantdesc
    (GET "/api/plantdesc/:id" [id]
          (json-response
-          (pds/req-plant-desc (:plant-desc-repo state) (util/parse-uint id))))
+          (pds/req-plant-desc plant-desc-repo (util/parse-uint id))))
    (GET "/api/plantdesc" []
         (json-response
-         (pds/req-plant-desc-list (:plant-desc-repo state))))
+         (pds/req-plant-desc-list plant-desc-repo)))
    (POST "/api/plantdesc" [& params]
          (json-response
-          (pds/create-plant-desc (:plant-desc-repo state) params)))
+          (pds/create-plant-desc plant-desc-repo params)))
    (PUT "/api/plantdesc/:id" [id & params]
         (json-response
-         (pds/update-plant-desc (:plant-desc-repo state) (util/parse-uint id) params)))
+         (pds/update-plant-desc plant-desc-repo (util/parse-uint id) params)))
    (DELETE "/api/plantdesc/:id" [id]
            (json-response
-            (pds/delete-plant-desc (:plant-desc-repo state) (util/parse-uint id))))
+            (pds/delete-plant-desc plant-desc-repo (util/parse-uint id))))
 
    ;; fallback
    (route/not-found "Not Found")
