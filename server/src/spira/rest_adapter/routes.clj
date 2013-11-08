@@ -17,13 +17,9 @@
   (:require [spira.core.util :as util]
             [spira.rest-adapter.garden-service :as gs]
             [spira.rest-adapter.plant-desc-service :as pds]
-            [spira.dm.in-memory-repo :as memrepo]
-            [spira.core.system :as system]
             [spira.rest-adapter.util :refer :all]
             [compojure.core :refer :all]
-            [compojure.route :as route]
-            [compojure.handler :as handler]
-            [compojure.response :as response]))
+            [compojure.route :as route]))
 
 
 ;; The CRUD REST api follows the following schema:
@@ -35,7 +31,7 @@
 ;; DELETE    /api/foo/<id>    -> delete record
 
 (defn app-routes [{garden-repo :garden-repo plant-desc-repo :plant-desc-repo}]
-  (compojure.core/routes
+  (routes
 
    ;; /api/garden
    (GET "/api/garden/:id" [id]
@@ -74,8 +70,3 @@
    ;; fallback
    (route/not-found "Not Found")
   ))
-
-(def app
-  (handler/api (app-routes (system/dev-system)))
-  )
-
