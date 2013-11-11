@@ -17,12 +17,25 @@
 
 angular.module('spira.home', []);
 angular.module('spira.catalog', []);
+angular.module('spira.catalog.create-plant-desc', []);
 angular.module('spira.planner', []);
 
-angular.module('spira', ['spira.home', 'spira.catalog', 'spira.planner']).
+angular.module('spira', ['spira.home',
+                         'spira.catalog',
+                         'spira.catalog.create-plant-desc',
+                         'spira.planner']).
   config(['$routeProvider', function($routeProvider) {
-    $routeProvider.when('/home', {templateUrl: 'app/home/home.tpl.html', controller: 'HomeCtrl'});
-    $routeProvider.when('/catalog', {templateUrl: 'app/catalog/catalog.tpl.html', controller: 'CatalogCtrl'});
-    $routeProvider.when('/planner', {templateUrl: 'app/planner/planner.tpl.html', controller: 'PlannerCtrl'});
+    $routeProvider.when('/home',
+                        {templateUrl: 'app/home/home.tpl.html',
+                         controller: 'HomeCtrl'});
+    $routeProvider.when('/catalog',
+                        {templateUrl: 'app/catalog/catalog.tpl.html',
+                         controller: 'CatalogCtrl'});
+    $routeProvider.when('/catalog/create',
+                        {templateUrl: 'app/catalog/create-plant-desc.tpl.html',
+                         controller: 'CreatePlantDescCtrl'});
+    $routeProvider.when('/planner',
+                        {templateUrl: 'app/planner/planner.tpl.html',
+                         controller: 'PlannerCtrl'});
     $routeProvider.otherwise({redirectTo: '/home'});
   }]);

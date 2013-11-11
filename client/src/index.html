@@ -16,8 +16,8 @@
 
   <body>
 
-    <header class="navbar navbar-inverse navbar-fixed-top">
-
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="icon-bar"></span>
@@ -32,8 +32,8 @@
             <li><a href="#planner">Planerare</a></li>
           </ul>
         </div>
-
-    </header>
+      </div>
+    </div>
 
     <div data-ng-view></div>
 
@@ -46,6 +46,7 @@
     <script src="app/app.js"></script>
     <script src="app/home/home.js"></script>
     <script src="app/catalog/catalog.js"></script>
+    <script src="app/catalog/create-plant-desc.js"></script>
     <script src="app/planner/planner.js"></script>
     <!-- endbuild -->
 
