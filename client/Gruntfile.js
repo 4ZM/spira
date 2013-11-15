@@ -82,7 +82,6 @@ module.exports = function(grunt) {
         clean: {
             release: ['<%= distdir %>'],
             tmp: ['**/#*#', '**/*~'],
-            validation: ['validation-status.json', 'validation-report.json']
         },
         copy: {
             release: {
@@ -103,11 +102,6 @@ module.exports = function(grunt) {
         },
         usemin: {
             html: ['<%= distdir %>/index.html'],
-        },
-        validation: {
-            files: {
-                src: ['src/index.html']
-            }
         }
     });
 
@@ -123,16 +117,12 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-shell');
     grunt.loadNpmTasks('grunt-bower-task');
     grunt.loadNpmTasks('grunt-usemin');
-    grunt.loadNpmTasks('grunt-html-validation');
 
     // Default is prep
     grunt.registerTask('default', ['clean', 'test']);
 
-    // Validate and remove output files
-    grunt.registerTask('validate', ['validation', 'clean:validation']);
-
     // Check code
-    grunt.registerTask('lint', ['jshint', 'validate']);
+    grunt.registerTask('lint', ['jshint']);
 
     // Run tests
     grunt.registerTask('test', ['lint', 'karma:unitheadless', 'karma:e2eheadless']);
