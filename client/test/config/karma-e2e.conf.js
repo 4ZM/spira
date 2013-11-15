@@ -24,7 +24,7 @@ module.exports = function(config){
         port: 9777,
 
         proxies : {
-            '/': 'http://localhost:8000/src/'
+            '/': 'http://localhost:80/'
         },
 
         plugins : [
