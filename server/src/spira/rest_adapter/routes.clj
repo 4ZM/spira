@@ -40,9 +40,9 @@
    (GET "/api/garden" []
         (json-response
          (gs/req-garden-list garden-repo)))
-   (POST "/api/garden" [& params]
+   (POST "/api/garden" {body :body}
          (json-response
-          (gs/create-garden garden-repo params)))
+          (gs/create-garden garden-repo body)))
    (PUT "/api/garden/:id" [id & params]
         (json-response
          (gs/update-garden garden-repo (util/parse-uint id) params)))
@@ -57,9 +57,9 @@
    (GET "/api/plantdesc" []
         (json-response
          (pds/req-plant-desc-list plant-desc-repo)))
-   (POST "/api/plantdesc" [& params]
+   (POST "/api/plantdesc" {body :body}
          (json-response
-          (pds/create-plant-desc plant-desc-repo params)))
+          (pds/create-plant-desc plant-desc-repo body)))
    (PUT "/api/plantdesc/:id" [id & params]
         (json-response
          (pds/update-plant-desc plant-desc-repo (util/parse-uint id) params)))

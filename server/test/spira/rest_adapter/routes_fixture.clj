@@ -27,6 +27,10 @@
    :uri uri :headers []
    :params (first params)})
 
+(defn- test-post [uri body]
+  (let [r (test-req :post uri)]
+    (assoc r :body body)))
+
 (defn- test-state []
   (sys/->SystemState :gr :pdr))
 
@@ -58,16 +62,16 @@
 
 (facts "about garden create requests"
   (fact "/api/garden post creates garden"
-    (let [params {:name "torture"}
-          req (test-req :post "/api/garden" params)
+    (let [body {:name "torture"}
+          req (test-post "/api/garden" body)
           state (test-state)]
       (:status ((app-routes state) req)) => (:created http-status)
-      (provided (gs/create-garden :gr params) =>
+      (provided (gs/create-garden :gr body) =>
                 (response :created {:id 1}) :times 1)))
 
   (fact "/api/garden post bad data gives error"
     (let [bad-params {:wierd "param"}
-          req (test-req :post "/api/garden" bad-params)
+          req (test-post "/api/garden" bad-params)
           state (test-state)]
       (:status ((app-routes state) req)) => (:bad-req http-status)
       (provided (gs/create-garden :gr bad-params) =>
@@ -112,16 +116,16 @@
 
 (facts "about plant description create requests"
   (fact "/api/plantdesc post creates plant description"
-    (let [params {:family "f" :genus "g" :species "s" :kind "k"}
-          req (test-req :post "/api/plantdesc" params)
+    (let [body {:family "f" :genus "g" :species "s" :kind "k"}
+          req (test-post "/api/plantdesc" body)
           state (test-state)]
       (:status ((app-routes state) req)) => (:created http-status)
-      (provided (pds/create-plant-desc :pdr params) =>
+      (provided (pds/create-plant-desc :pdr body) =>
                 (response :created {:id 1}) :times 1)))
 
   (fact "/api/plantdesc post bad data gives error"
     (let [bad-params {:wierd "param"}
-          req (test-req :post "/api/plantdesc" bad-params)
+          req (test-post "/api/plantdesc" bad-params)
           state (test-state)]
       (:status ((app-routes state) req)) => (:bad-req http-status)
       (provided (pds/create-plant-desc :pdr bad-params) =>

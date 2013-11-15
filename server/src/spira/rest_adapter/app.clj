@@ -16,8 +16,12 @@
 (ns spira.rest-adapter.app
   (:require [compojure.handler :as handler]
             [spira.core.system :as system]
+            [ring.middleware.json :as json-mw]
             [spira.rest-adapter.routes :refer :all]))
 
+(defn wrap-json-body [handler]
+  (json-mw/wrap-json-body handler {:keywords? true}))
+
 ;; Ring entry point
-(def app (handler/api (app-routes (system/dev-system))))
+(def app (handler/api (wrap-json-body (app-routes (system/dev-system)))))
 
