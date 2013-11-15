@@ -15,10 +15,27 @@
 
 'use strict';
 
-// Add controller to module
 angular.module('spira.catalog.create-plant-desc')
-    .controller('CreatePlantDescCtrl', ['$scope', '$http', function($scope, $http) {
+  .controller(
+    'CreatePlantDescCtrl',
+    ['$scope', '$http', '$log', function($scope, $http, $log) {
 
+      $scope.plant = {};
 
+      // Handler for the create plant desc. button
+      $scope.addPlantDesc = function() {
+
+        // Call the create api
+        $http.post("/api/plantdesc", $scope.plant).
+          success(function(response) {
+
+            // Get the id of the newly created plant desc
+            $scope.data = response.data;
+          }).
+          error(function(response) {
+            throw new Error("Error creating plant description: " +
+                            response.status);
+          });
+      };
     }]);
 
