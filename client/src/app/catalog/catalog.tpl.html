@@ -13,7 +13,9 @@
     <div class="col-md-8">
       <ul>
         <li ng-repeat="pd in plantDesc">
-        <b>Sort:</b> {{pd.kind}}
+          <a href="#/catalog/{{pd.id}}">
+            <b>Sort:</b> {{pd.kind}}
+          </a>
         </li>
       </ul>
     </div>

@@ -17,11 +17,13 @@
 
 angular.module('spira.home', []);
 angular.module('spira.catalog', []);
+angular.module('spira.catalog.view-plant-desc', []);
 angular.module('spira.catalog.create-plant-desc', []);
 angular.module('spira.planner', []);
 
 angular.module('spira', ['spira.home',
                          'spira.catalog',
+                         'spira.catalog.view-plant-desc',
                          'spira.catalog.create-plant-desc',
                          'spira.planner']).
   config(['$routeProvider', function($routeProvider) {
@@ -31,6 +33,9 @@ angular.module('spira', ['spira.home',
     $routeProvider.when('/catalog',
                         {templateUrl: 'app/catalog/catalog.tpl.html',
                          controller: 'CatalogCtrl'});
+    $routeProvider.when('/catalog/:id',
+                        {templateUrl: 'app/catalog/view-plant-desc.tpl.html',
+                         controller: 'ViewPlantDescCtrl'});
     $routeProvider.when('/catalog/create',
                         {templateUrl: 'app/catalog/create-plant-desc.tpl.html',
                          controller: 'CreatePlantDescCtrl'});
