@@ -1,21 +1,22 @@
-<div class="row">
-  <div class="bs-sidebar hidden-print col-md-2 well"
-       role="complementary">
+<div class="container">
+  <div class="row">
 
-    <form class="form-search">
-      <input type="text"
-             class="search-query"
-             placeholder="Search&hellip;">
-    </form>
+    <div class="hidden-print col-md-2 well">
+      <form class="form-search">
+        <div class="input-append">
+          <input ng-model="searchbox" type="text" class="form-control"
+                 placeholder="Sök växt">
+        </div>
+      </form>
+    </div>
 
-    <ul class="nav bs-sidenav">
-        <li ng-repeat="s in species"><a href="#fu">{{s.name}} - {{s.kindname}}</a></li>
-    </ul>
+    <div class="col-md-8">
+      <ul>
+        <li ng-repeat="pd in plantDesc">
+        <b>Sort:</b> {{pd.kind}}
+        </li>
+      </ul>
+    </div>
 
-  </div>
-
-  <div class="col-md-10">
-    <p>{{species}}</p>
   </div>
 </div>
-

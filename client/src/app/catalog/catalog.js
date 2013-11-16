@@ -17,15 +17,19 @@
 
 // Add controller to module
 angular.module('spira.catalog')
-    .controller('CatalogCtrl', ['$scope', '$http', function($scope, $http) {
-        $scope.querySpecies = function() {
-            $http.get('fubar')
-                .success(function (data, status, headers, config) {
-                    $scope.species = data;
-                })
-                .error(function (data, status, headers, config) {
-                    throw new Error("Can't get fubar");
-                });
-        };
-    }]);
+  .controller('CatalogCtrl', ['$scope', '$http', function($scope, $http) {
+    $scope.plantDesc = {};
+
+    $scope.queryPlantDescs = function() {
+      $http.get('/api/plantdesc')
+        .success(function (data, status, headers, config) {
+          $scope.plantDesc = data;
+        })
+        .error(function (data, status, headers, config) {
+          throw new Error("Can't get fubar");
+        });
+    };
+
+    $scope.queryPlantDescs();
+  }]);
 
