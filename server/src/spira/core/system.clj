@@ -17,7 +17,8 @@
   (:require [spira.dm.garden :as garden]
             [spira.dm.plant-desc :as plant-desc]
             [spira.dm.in-memory-repo :as mem-repo]
-            [spira.datomic-adapter.repo :as da]))
+            [spira.datomic-adapter.repo :as da]
+            [spira.datomic-adapter.data :as data]))
 
 ;; A representation of the applications total top level state.
 (defrecord SystemState [garden-repo plant-desc-repo])
@@ -28,10 +29,13 @@
    (mem-repo/memory-garden-repo)
    (mem-repo/memory-plant-description-repo)))
 
+(def test-uri "datomic:mem://spira")
+
 (defn dev-system []
   "Create a light weight development state"
-  (let [uri da/test-uri]
-    (da/create-test-db uri)
-    (->SystemState
-     (da/datomic-garden-repo uri)
-     (da/datomic-plant-description-repo uri))))
+  (data/create-test-db test-uri)
+  (let [gr (da/datomic-garden-repo test-uri)
+        pr (da/datomic-plant-description-repo test-uri)]
+    (data/populate-gardens gr)
+    (data/populate-plant-descriptions pr)
+    (->SystemState gr pr)))

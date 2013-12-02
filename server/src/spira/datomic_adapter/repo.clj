@@ -20,18 +20,6 @@
             [spira.core.util :as util]
             [datomic.api :as d]))
 
-(def test-uri "datomic:mem://spira")
-
-(defn create-test-db [uri]
-  (d/delete-database uri)
-  (d/create-database uri)
-  (let [conn (d/connect uri)
-        schema-tx (read-string (slurp "src/spira/datomic_adapter/schema.edn"))
-        data-tx (read-string (slurp "src/spira/datomic_adapter/data.edn"))]
-    @(d/transact conn schema-tx)
-    @(d/transact conn data-tx))
-  nil)
-
 (defn- contains [conn id]
   (not (empty? (d/q '[:find ?id :in $ ?id :where [?id]] (d/db conn) id))))
 
