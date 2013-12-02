@@ -36,7 +36,7 @@ angular.module('spira', ['spira.home',
     $routeProvider.when('/catalog/:id',
                         {templateUrl: 'app/catalog/view-plant-desc.tpl.html',
                          controller: 'ViewPlantDescCtrl'});
-    $routeProvider.when('/catalog/create',
+    $routeProvider.when('/create-plant-desc',
                         {templateUrl: 'app/catalog/create-plant-desc.tpl.html',
                          controller: 'CreatePlantDescCtrl'});
     $routeProvider.when('/planner',
