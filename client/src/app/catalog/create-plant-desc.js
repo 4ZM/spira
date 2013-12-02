@@ -20,6 +20,8 @@ angular.module('spira.catalog.create-plant-desc')
     'CreatePlantDescCtrl',
     ['$scope', '$http', '$log', function($scope, $http, $log) {
 
+      $log.info("CreatePlantDescCtrl");
+
       $scope.plant = {};
 
       // Handler for the create plant desc. button

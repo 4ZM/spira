@@ -24,13 +24,13 @@ angular.module('spira.catalog.view-plant-desc')
        $scope.name = {};
 
        // Do some sanity check on the param?
-       
        // Call the create api
+       $log.info("ViewPlantDescCtrl");
        $log.info("route params: " + $routeParams);
        $log.info("route id: " + $routeParams.id);
 
        var reqUrl = "/api/plantdesc/" + $routeParams.id;
-       
+
        $http.get("/api/plantdesc/" + $routeParams.id).
          success(function(response) {
            $scope.name = response.name;
@@ -39,6 +39,5 @@ angular.module('spira.catalog.view-plant-desc')
             throw new Error("Error requesting plant description: " +
                             response.status);
          });
-       
      }]);
 
