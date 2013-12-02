@@ -1,0 +1,18 @@
+Developer notes
+
+
+Start the REST service (in the server directory):
+lein ring server-headless
+
+Run the full web app, frontend + backend using nginx.
+See sample nginx.conf file.
+
+Unit tests for the server:
+lein midje
+
+Unit tests for the client:
+grunt test
+
+Frontend test server:
+./tests/scripts/test-server.js
+
