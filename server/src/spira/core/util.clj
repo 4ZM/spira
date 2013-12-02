@@ -20,8 +20,9 @@
   (str (java.util.UUID/randomUUID)))
 
 (defn parse-uint [s]
-  "a2uint"
-  (Integer. (re-find  #"\d+" s )))
+  "a2uint (nil if not a number)"
+  (if (re-find #"^\d+$" s)
+    (read-string s)))
 
 (defn find-first [f coll]
   "Get first item in a seq matching a predicate."
