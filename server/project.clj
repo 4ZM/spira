@@ -9,7 +9,8 @@
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [compojure "1.1.1"]
                  [cheshire "4.0.0"]
-                 [ring/ring-json "0.2.0"]]
+                 [ring/ring-json "0.2.0"]
+                 [com.datomic/datomic-free "0.8.4260"]]
 
   :profiles {:dev {:dependencies [[midje "1.4.0"]]
                    :plugins [[lein-midje "2.0.1"]]}}

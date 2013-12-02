@@ -1,0 +1,103 @@
+;; Copyright (C) 2013 Anders Sundman <anders@4zm.org>
+;;
+;; This program is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU Affero General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+;;
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+;; GNU Affero General Public License for more details.
+;;
+;; You should have received a copy of the GNU Affero General Public License
+;; along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+[
+
+ ;; garden
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :garden/name
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/fulltext true
+  :db/doc "A gardens's name"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id [:db.part/db]
+  :db/ident :garden/seedings
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/many
+  :db/doc "A garden's seedings"
+  :db.install/_attribute :db.part/db}
+
+ ;; plant description
+
+ {:db/id #db/id [:db.part/db]
+ :db/ident :plant.desc/name
+ :db/valueType :db.type/ref
+ :db/cardinality :db.cardinality/one
+ :db/doc "The name of a plant"
+ :db.install/_attribute :db.part/db}
+
+ ;; plant hierarchy name
+
+ {:db/id #db/id [:db.part/db]
+  :db/ident :plant.taxonomy.family/name
+  :db/valueType :db.type/string
+  :db/fulltext true
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "The family part of a plant name"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id [:db.part/db]
+  :db/ident :plant.taxonomy.genus/name
+  :db/valueType :db.type/string
+  :db/fulltext true
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "The genus part of a plant name"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id [:db.part/db]
+  :db/ident :plant.taxonomy.species/name
+  :db/valueType :db.type/string
+  :db/fulltext true
+  :db/cardinality :db.cardinality/one
+  :db/doc "The species part of a plant name"
+  :db.install/_attribute :db.part/db}
+
+ ;; The plant name
+
+ {:db/id #db/id [:db.part/db]
+  :db/ident :plant.name/family
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "The family part of a plant name"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id [:db.part/db]
+  :db/ident :plant.name/genus
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "The genus part of a plant name"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id [:db.part/db]
+  :db/ident :plant.name/species
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "The species part of a plant name"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id [:db.part/db]
+  :db/ident :plant.name/kind
+  :db/valueType :db.type/string
+  :db/fulltext true
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "The kind part of a plant name"
+  :db.install/_attribute :db.part/db}
+]

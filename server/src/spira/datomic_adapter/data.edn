@@ -1,0 +1,78 @@
+[
+
+ ;; Setup some gardens
+
+ {:db/id #db/id[:db.part/user], :garden/name "Torture"}
+ {:db/id #db/id[:db.part/user], :garden/name "Babylon"}
+
+ ;; Create some plant names
+
+ {:db/id #db/id[:db.part/user -1000]
+  :plant.taxonomy.family/name "Flockblommiga"}
+ {:db/id #db/id[:db.part/user -1001]
+  :plant.taxonomy.genus/name "Morotssläktet"}
+ {:db/id #db/id[:db.part/user -1002]
+  :plant.taxonomy.species/name "Morot"}
+
+ {:db/id #db/id[:db.part/user -1010]
+  :plant.name/family #db/id [:db.part/user -1000]
+  :plant.name/genus #db/id [:db.part/user -1001]
+  :plant.name/species #db/id [:db.part/user -1002]
+  :plant.name/kind "Early Nantes"}
+
+ {:db/id #db/id[:db.part/user]
+  :plant.desc/name #db/id [:db.part/user -1010]}
+
+ {:db/id #db/id[:db.part/user -1011]
+  :plant.name/family #db/id [:db.part/user -1000]
+  :plant.name/genus #db/id [:db.part/user -1001]
+  :plant.name/species #db/id [:db.part/user -1002]
+  :plant.name/kind "Amsterdam"}
+
+ {:db/id #db/id[:db.part/user]
+  :plant.desc/name #db/id [:db.part/user -1011]}
+
+ {:db/id #db/id[:db.part/user -1012]
+  :plant.name/family #db/id [:db.part/user -1000]
+  :plant.name/genus #db/id [:db.part/user -1001]
+  :plant.name/species #db/id [:db.part/user -1002]
+  :plant.name/kind "London Torg"}
+
+ {:db/id #db/id[:db.part/user]
+  :plant.desc/name #db/id [:db.part/user -1012]}
+
+ {:db/id #db/id[:db.part/user -1013]
+  :plant.name/family #db/id [:db.part/user -1000]
+  :plant.name/genus #db/id [:db.part/user -1001]
+  :plant.name/species #db/id [:db.part/user -1002]
+  :plant.name/kind "Autumn King"}
+
+ {:db/id #db/id[:db.part/user]
+  :plant.desc/name #db/id [:db.part/user -1013]}
+
+ {:db/id #db/id[:db.part/user -1003]
+  :plant.taxonomy.family/name "Korgblommiga"}
+ {:db/id #db/id[:db.part/user -1004]
+  :plant.taxonomy.genus/name "Kronärtskockssläktet"}
+ {:db/id #db/id[:db.part/user -1005]
+  :plant.taxonomy.species/name "Kronärtskocka"}
+
+ {:db/id #db/id[:db.part/user -1014]
+  :plant.name/family #db/id [:db.part/user -1003]
+  :plant.name/genus #db/id [:db.part/user -1004]
+  :plant.name/species #db/id [:db.part/user -1005]
+  :plant.name/kind "Imperial Star"}
+
+ {:db/id #db/id[:db.part/user]
+  :plant.desc/name #db/id [:db.part/user -1014]}
+
+ {:db/id #db/id[:db.part/user -1015]
+  :plant.name/family #db/id [:db.part/user -1003]
+  :plant.name/genus #db/id [:db.part/user -1004]
+  :plant.name/species #db/id [:db.part/user -1005]
+  :plant.name/kind "Green Globe"}
+
+ {:db/id #db/id[:db.part/user]
+  :plant.desc/name #db/id [:db.part/user -1015]}
+
+]
