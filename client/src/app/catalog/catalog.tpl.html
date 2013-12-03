@@ -1,23 +1,39 @@
 <div class="container">
+  <h2>Växtkatalog</h2>
+  <hr/>
   <div class="row">
+    <form class="form-search">
+      <div class="col-md-4 input-append">
+        <input ng-model="searchbox" type="text" class="form-control"
+               placeholder="Sök växt">
+      </div>
+      <div class="col-md-8 text-right">
+        <button type="button" class="btn btn-link">All</button>
+        <button type="button" class="btn btn-link">My</button>
+        <button type="button" class="btn btn-link">Popular</button>
+      </div>
+    </form>
+  </div>
 
-    <div class="hidden-print col-md-2 well">
-      <form class="form-search">
-        <div class="input-append">
-          <input ng-model="searchbox" type="text" class="form-control"
-                 placeholder="Sök växt">
-        </div>
-      </form>
+  <div ng-repeat="pd in plantDesc" class="row">
+    <hr/>
+
+    <div class="col-md-6">
+      <a href="#/catalog/{{pd.id}}"><h4>{{pd.kind}}</h4></a>
     </div>
-
+    <div class="col-md-6 text-right">
+      <h4><small class="">{{pd.species}}</small></h4>
+    </div>
     <div class="col-md-8">
-      <ul>
-        <li ng-repeat="pd in plantDesc">
-          <a href="#/catalog/{{pd.id}}">
-            <b>Sort:</b> {{pd.kind}}
-          </a>
-        </li>
-      </ul>
+      <p>
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+      eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+      enimad minim veniam, quis nostrud exercitation ullamco laboris
+      nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+      in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+      nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+      sunt in culpa qui officia deserunt mollit anim id est laborum.
+      </p>
     </div>
 
   </div>
