@@ -21,7 +21,8 @@ angular.module('spira.catalog.view-plant-desc', []);
 angular.module('spira.catalog.create-plant-desc', []);
 angular.module('spira.planner', []);
 
-angular.module('spira', ['spira.home',
+angular.module('spira', ['ngRoute',
+                         'spira.home',
                          'spira.catalog',
                          'spira.catalog.view-plant-desc',
                          'spira.catalog.create-plant-desc',
