@@ -19,12 +19,22 @@
 angular.module('spira.catalog')
   .controller('CatalogCtrl', ['$scope', '$http', function($scope, $http) {
     $scope.plantDesc = {};
+    $scope.species = {};
     $scope.speciesVisible = {};
 
     $scope.queryPlantDescs = function() {
       $http.get('/api/plantdesc')
         .success(function (data, status, headers, config) {
           $scope.plantDesc = data;
+
+          for (var i = 0; i < data.length; ++i) {
+            var s = data[i].species;
+
+            if (!(s in $scope.species))
+              $scope.species[s] = [data[i]];
+            else
+              $scope.species[s].push(data[i]);
+          }
         })
         .error(function (data, status, headers, config) {
           throw new Error("Can't get fubar");

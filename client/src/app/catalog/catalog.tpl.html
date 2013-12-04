@@ -15,49 +15,51 @@
     </form>
   </div>
 
-  <div class="row">
-    <hr/>
-    <div class="col-md-6">
-      <h4>
-        <div ng-click="speciesVisible['Morot']=!speciesVisible['Morot']"
-             ng-init="speciesVisible['Morot'] = false">
-          <i ng-show="speciesVisible['Morot']" class="fa fa-chevron-circle-down"></i>
-          <i ng-hide="speciesVisible['Morot']" class="fa fa-chevron-circle-right"></i>
-        &nbsp; Morot
-        </div>
-      </h4>
+  <div ng-repeat="(s, plants) in species">
+    <div class="row">
+      <hr/>
+      <div class="col-md-6">
+        <h4>
+          <div ng-click="speciesVisible[s]=!speciesVisible[s]"
+               ng-init="speciesVisible[s] = true">
+            <i ng-show="speciesVisible[s]" class="fa fa-chevron-circle-down"></i>
+            <i ng-hide="speciesVisible[s]" class="fa fa-chevron-circle-right"></i>
+            &nbsp; {{s}}
+          </div>
+        </h4>
+      </div>
+      <div ng-show="speciesVisible[s]" class="col-md-8">
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        </p>
+      </div>
     </div>
-    <div ng-show="speciesVisible['Morot']" class="col-md-8">
-      <p>
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-      eiusmod tempor incididunt ut labore et dolore magna aliqua.
-      </p>
-    </div>
-  </div>
 
-  <div ng-repeat="pd in plantDesc" class="row">
-    <hr/>
+    <div ng-repeat="pd in plants" ng-show="speciesVisible[s]" class="row">
+      <hr/>
 
-    <div class="col-md-6">
-      <h4>
-        <a href="#/catalog/{{pd.id}}">{{pd.kind}}</a>
-        &nbsp;
-        <i class="fa fa-star-o"></i>
-      </h4>
-    </div>
-    <div class="col-md-6 text-right">
-      <h4><small class="">{{pd.species}}</small></h4>
-    </div>
-    <div class="col-md-8">
-      <p>
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-      eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-      enimad minim veniam, quis nostrud exercitation ullamco laboris
-      nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-      in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-      nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-      sunt in culpa qui officia deserunt mollit anim id est laborum.
-      </p>
+      <div class="col-md-6">
+        <h4>
+          <a href="#/catalog/{{pd.id}}">{{pd.kind}}</a>
+          &nbsp;
+          <i class="fa fa-star-o"></i>
+        </h4>
+      </div>
+      <div class="col-md-6 text-right">
+        <h4><small class="">{{pd.species}}</small></h4>
+      </div>
+      <div class="col-md-8">
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+          enimad minim veniam, quis nostrud exercitation ullamco laboris
+          nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+          in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+          nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+          sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </p>
+      </div>
     </div>
   </div>
 </div>
