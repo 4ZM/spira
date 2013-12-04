@@ -19,6 +19,7 @@
 angular.module('spira.catalog')
   .controller('CatalogCtrl', ['$scope', '$http', function($scope, $http) {
     $scope.plantDesc = {};
+    $scope.speciesVisible = {};
 
     $scope.queryPlantDescs = function() {
       $http.get('/api/plantdesc')

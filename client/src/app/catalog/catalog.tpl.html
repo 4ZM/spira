@@ -15,6 +15,26 @@
     </form>
   </div>
 
+  <div class="row">
+    <hr/>
+    <div class="col-md-6">
+      <h4>
+        <div ng-click="speciesVisible['Morot']=!speciesVisible['Morot']"
+             ng-init="speciesVisible['Morot'] = false">
+          <i ng-show="speciesVisible['Morot']" class="fa fa-chevron-circle-down"></i>
+          <i ng-hide="speciesVisible['Morot']" class="fa fa-chevron-circle-right"></i>
+        &nbsp; Morot
+        </div>
+      </h4>
+    </div>
+    <div ng-show="speciesVisible['Morot']" class="col-md-8">
+      <p>
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+      eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      </p>
+    </div>
+  </div>
+
   <div ng-repeat="pd in plantDesc" class="row">
     <hr/>
 
