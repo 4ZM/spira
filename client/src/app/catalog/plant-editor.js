@@ -15,15 +15,29 @@
 
 'use strict';
 
-angular.module('spira.catalog.create-plant-desc')
+angular.module('spira.catalog.plant-editor')
   .controller(
-    'CreatePlantDescCtrl',
+    'PlantEditorCtrl',
     ['$scope', '$http', '$log', function($scope, $http, $log) {
 
-      $log.info("CreatePlantDescCtrl");
+      $log.info("PlantEditorCtrl");
 
       $scope.plant = {};
+      $scope.plant['species'] = 'Morot';
 
+      $scope.kinds = [{
+        "name":"n1",
+        "desc":""
+      }];
+
+      $scope.deletePlant = function() {
+        $log.info("DELETE PLANT " + $scope.plant.species);
+      };
+
+      $scope.addKind = function() {
+        $log.info("Add kind");
+        $scope.kinds.push({"name":"", "desc":""});
+      };
       // Handler for the create plant desc. button
       $scope.addPlantDesc = function() {
 
