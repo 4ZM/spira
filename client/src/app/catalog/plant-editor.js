@@ -18,40 +18,57 @@
 angular.module('spira.catalog.plant-editor')
   .controller(
     'PlantEditorCtrl',
-    ['$scope', '$http', '$log', function($scope, $http, $log) {
+    ['$scope', '$http', '$log', '$routeParams',
+     function($scope, $http, $log, $routeParams) {
 
-      $log.info("PlantEditorCtrl");
+       $scope.species = {};
+       $scope.kinds = {};
 
-      $scope.plant = {};
-      $scope.plant['species'] = 'Morot';
+       $log.info("PlantEditorCtrl");
 
-      $scope.kinds = [{
-        "name":"n1",
-        "desc":""
-      }];
+       $log.info("route params: " + $routeParams);
+       $log.info("route id: " + $routeParams.id);
 
-      $scope.deletePlant = function() {
-        $log.info("DELETE PLANT " + $scope.plant.species);
-      };
 
-      $scope.addKind = function() {
-        $log.info("Add kind");
-        $scope.kinds.push({"name":"", "desc":""});
-      };
-      // Handler for the create plant desc. button
-      $scope.addPlantDesc = function() {
+       $scope.saveSpecies = function() {
+         $log.info("save species");
+       };
 
-        // Call the create api
-        $http.post("/api/plantdesc", $scope.plant).
-          success(function(response) {
+       $scope.deleteSpecies = function() {
+         $log.info("delete species");
+       };
 
-            // Get the id of the newly created plant desc
-            $scope.data = response.data;
-          }).
-          error(function(response) {
-            throw new Error("Error creating plant description: " +
-                            response.status);
-          });
-      };
-    }]);
+
+       $scope.addKind = function() {
+         $log.info("add kind");
+       };
+
+       $scope.deleteKind = function(k) {
+         $log.info("delete kind");
+       };
+
+       $scope.saveKind = function(k) {
+         $log.info("save kind");
+       };
+
+       $http.get("/api/species/" + $routeParams.id).
+         success(function(response) {
+           $scope.species = response;
+
+           $log.info("will now request kinds");
+           $http.get("/api/species/" + $routeParams.id + '/kinds').
+             success(function(response) {
+               $log.info("kind request completed");
+               $scope.kinds = response;
+             }).
+             error(function(response) {
+               throw new Error("Error requesting species kinds: " +
+                               response.status);
+             });
+         }).
+         error(function(response) {
+           throw new Error("Error requesting species: " +
+                           response.status);
+         });
+     }]);
 

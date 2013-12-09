@@ -4,10 +4,10 @@
 
   <div class="row">
     <div class="h2 col-sm-11">
-      {{plant.species || "Växt"}}
+      {{species.name || "Växt"}}
     </div>
     <div class="h2 col-sm-1 text-right">
-      <i ng-click="deletePlant()" class="fa fa-trash-o fa-1x text-danger"></i>
+      <i ng-click="deleteSpecies()" class="fa fa-trash-o fa-1x text-danger"></i>
     </div>
   </div>
 
@@ -19,72 +19,70 @@
     <div class="form-group">
       <label class="col-sm-2 control-label">Art</label>
       <div class="col-sm-8">
-        <input ng-model="plant.species" type="text" class="form-control" placeholder="Art">
+        <input ng-model="species.name" type="text" class="form-control" placeholder="Art">
       </div>
     </div>
     <div class="form-group">
       <label class="col-sm-2 control-label">Familj</label>
       <div class="col-sm-8">
-        <input ng-model="plant.family" type="text" class="form-control" placeholder="Familj">
+        <input ng-model="species.family" type="text" class="form-control" placeholder="Familj">
       </div>
     </div>
 
     <div class="form-group">
       <label class="col-sm-2 control-label">Släkte</label>
       <div class="col-sm-8">
-        <input ng-model="plant.genus" type="text" class="form-control" placeholder="Släkte">
+        <input ng-model="species.genus" type="text" class="form-control" placeholder="Släkte">
       </div>
     </div>
-    
+
     <div class="form-group">
       <label class="col-sm-2 control-label">Besrkivning</label>
       <div class="col-sm-8">
-      <textarea ng-model="plant.desc" class="form-control" rows="3"
+      <textarea ng-model="species.description" class="form-control" rows="3"
                 placeholder="Beskriv arten här..."></textarea>
       </div>
     </div>
 
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button ng-click="saveSpecies()" type="submit" class="btn btn-primary">Spara art</button>
+      </div>
+    </div>
+
     <hr />
-    
+
     <div class="row">
       <div class="h3 col-sm-8">
         Sorter
       </div>
-      <div ng-click="addKind()" class="col-sm-3 text-right text-success">
-        <i class="fa fa-plus-circle fa-2x"></i>
+      <div class="col-sm-3 text-right text-success">
+        <i ng-click="addKind()" class="fa fa-plus-circle fa-2x"></i>
       </div>
     </div>
-    
-
-    <hr />
 
     <div ng-repeat="k in kinds">
+      <hr />
       <div class="form-group">
         <label class="col-sm-2 control-label">Sort</label>
         <div class="col-sm-8">
           <input ng-model="k.name" type="text" class="form-control" placeholder="Sort">
         </div>
         <div class="col-sm-1 text-danger text-right">
-          <i class="fa fa-trash-o fa-2x"></i>
+          <i ng-click="deleteKind(k)" class="fa fa-trash-o fa-2x"></i>
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-2 control-label">Besrkivning</label>
         <div class="col-sm-8">
-          <textarea ng-model="k.desc" class="form-control" rows="3"
+          <textarea ng-model="k.description" class="form-control" rows="3"
                     placeholder="Beskriv sorten här..."></textarea>
         </div>
       </div>
-      
-      <hr />
-      
-    </div>
-
-
-    <!-- Submit button -->
-    <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-10">
-        <button ng-click="addPlantDesc()" type="submit" class="btn btn-primary">Skapa</button>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button ng-click="saveKind(k)" type="submit" class="btn btn-primary">Spara sort</button>
+        </div>
       </div>
     </div>
 
