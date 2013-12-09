@@ -15,13 +15,24 @@
 
 (ns spira.datomic-adapter.repo
   (:require [spira.dm.garden :as garden]
-            [spira.dm.plant-desc :as plant-desc]
+            [spira.dm.plant :as plant]
             [spira.dm.seeding :as seeding]
             [spira.core.util :as util]
             [datomic.api :as d]))
 
-(defn- contains [conn id]
-  (not (empty? (d/q '[:find ?id :in $ ?id :where [?id]] (d/db conn) id))))
+(defn- contains-id [conn id]
+  "TODO remove after refactoring garden repo"
+  (seq (d/q '[:find ?id :in $ ?id :where [?id]] (d/db conn) id)))
+
+(defn- delete [conn id]
+  "Delete an entity from a db. Return true if an entity was removed.
+   Do nothing and return false if the entity is not present."
+  (if (contains-id conn id)
+    (do
+      @(d/transact conn [[:db.fn/retractEntity id]])
+      true)
+    false))
+
 
 (defrecord DatomicGardenRepo [conn]
   garden/GardenRepo
@@ -40,31 +51,30 @@
       (d/resolve-tempid (d/db conn) (:tempids tx) tmp-id)))
 
   (delete-garden [_ id]
-    (if (contains conn id)
+    (if (contains-id conn id)
       (do
         @(d/transact conn [[:db.fn/retractEntity id]])
         true)
       false))
 
   (update-garden [_ id g]
-    (if (contains conn id)
+    (if (contains-id conn id)
       (do
         @(d/transact conn [{:db/id id :garden/name (:name g)}])
         true)
       false)))
 
-(defn datomic-garden-repo [uri]
+(defn create-garden-repo [uri]
   (->DatomicGardenRepo (d/connect uri)))
 
-
-;; Helpers to create family/genus/species datoms
+;; Helpers to create family/genus datoms
 (defn- get-named-datom [conn datom name]
   (let [query '[:find ?x :in $ ?datom ?name
                 :where [?x ?datom ?name]]]
     (ffirst (d/q query (d/db conn) datom name))))
 
 (defn- create-named-datom [conn datom name]
-  (let [tmp-id #db/id[:db.part/user -1337]
+  (let [tmp-id #db/id[:db.part/user -1]
         new-datom {:db/id tmp-id datom name}
         tx @(d/transact conn [new-datom])]
     (d/resolve-tempid (d/db conn) (:tempids tx) tmp-id)))
@@ -74,93 +84,97 @@
       (create-named-datom conn datom name)))
 
 (defn- get-or-create-family [conn name]
-  (get-or-create-named-datom conn :plant.taxonomy.family/name name))
+  (get-or-create-named-datom conn :taxonomy.family/name name))
 (defn- get-or-create-genus [conn name]
-  (get-or-create-named-datom conn :plant.taxonomy.genus/name name))
-(defn- get-or-create-species [conn name]
-  (get-or-create-named-datom conn :plant.taxonomy.species/name name))
+  (get-or-create-named-datom conn :taxonomy.genus/name name))
 
+(defn- find-species [conn sname]
+  "Lookup specis id from name. nil if it is not found."
+  (ffirst
+   (d/q '[:find ?id :in $ ?sn :where [?id :species/name ?sn]]
+        (d/db conn) sname)))
 
+(defrecord DatomicPlantRepo [conn]
+  plant/PlantRepo
 
-(defrecord DatomicPlantDescriptionRepo [conn]
-  plant-desc/PlantDescriptionRepo
+  (species [_]
+    (let [species (d/q '[:find ?s ?sn ?fn ?gn ?d :where
+                         [?s :species/name ?sn]
+                         [?s :species/family ?f]
+                         [?f :taxonomy.family/name ?fn]
+                         [?s :species/genus ?g]
+                         [?g :taxonomy.genus/name ?gn]
+                         [?s :species/description ?d]]
+                       (d/db conn))]
+      (seq (map (partial apply plant/create-species) species))))
 
-  (list-descriptions [_]
-    (let [plant-descriptions (d/q '[:find ?pd ?k ?sn :where
-                                    [?pd :plant.desc/name ?n]
-                                    [?n :plant.name/kind ?k]
-                                    [?n :plant.name/species ?s]
-                                    [?s :plant.taxonomy.species/name ?sn]]
-                                  (d/db conn))]
-      (map #(zipmap [:id :kind :species] %) plant-descriptions))
-    )
+  (species [_ id]
+    (let [species (d/q '[:find ?s ?sn ?fn ?gn ?d
+                         :in $ ?s :where
+                         [?s :species/name ?sn]
+                         [?s :species/family ?f]
+                         [?f :taxonomy.family/name ?fn]
+                         [?s :species/genus ?g]
+                         [?g :taxonomy.genus/name ?gn]
+                         [?s :species/description ?d]]
+                       (d/db conn) id)]
+      (if (empty? species)
+        nil
+        (apply plant/create-species (first species)))))
 
-  (get-plant-desc [_ id]
-    (let [desc (-> conn d/db (d/entity id))
-          name (:plant.desc/name desc)
-          family (:plant.taxonomy.family/name (:plant.name/family name))
-          genus (:plant.taxonomy.genus/name (:plant.name/genus name))
-          species (:plant.taxonomy.species/name (:plant.name/species name))
-          kind (:plant.name/kind name)
-          ]
-      (plant-desc/create-plant-desc family genus species kind)))
+  (add-species [_ species]
+    (let [family-id (get-or-create-family conn (-> species :family))
+          genus-id (get-or-create-genus conn (-> species :genus))
 
-  (add-plant-desc [_ desc]
+          ;; Create a new temp id (add) or get the current id (update).
+          id (or (:id species) #db/id[:db.part/user -1])
 
-    (let [
-          ;; Get the taxonomy names from db - if exists
-          family-id (get-or-create-family conn (-> desc :name :family))
-          genus-id (get-or-create-genus conn (-> desc :name :genus))
-          species-id (get-or-create-species conn (-> desc :name :species))
+          ;; Create transaction for adding or updating species.
+          new-species [{:db/id id
+                        :species/name (-> species :name)
+                        :species/family family-id
+                        :species/genus genus-id
+                        :species/description (-> species :description)}]
 
-          ;; Create transaction for adding description
-          tmp-name-id #db/id[:db.part/user -1337]
-          tmp-desc-id #db/id[:db.part/user -4711]
-          new-desc [ {:db/id tmp-name-id
-                      :plant.name/family family-id
-                      :plant.name/genus genus-id
-                      :plant.name/species species-id
-                      :plant.name/kind (-> desc :name :kind)}
-                     {:db/id tmp-desc-id
-                      :plant.desc/name tmp-name-id}]
+          ;; Perform transaction.
+          tx @(d/transact conn new-species)]
 
-          ;; Do it
-          tx @(d/transact conn new-desc)]
+      ;; Return the species (with valid id).
+      (if (:id species)
+        species
+        (assoc species :id (d/resolve-tempid (d/db conn) (:tempids tx) id)))))
 
-      ;; Return new descriptions id
-      (d/resolve-tempid (d/db conn) (:tempids tx) tmp-desc-id)
-      ))
+  (delete-species [_ id] (delete conn id))
 
-  (update-plant-desc [_ id desc]
-    (let [
-          ;; Get the taxonomy names from db - if exists
-          family-id (get-or-create-family conn (-> desc :name :family))
-          genus-id (get-or-create-genus conn (-> desc :name :genus))
-          species-id (get-or-create-species conn (-> desc :name :species))
+  (kinds [_ sid]
+    (let [kinds (d/q '[:find ?k ?kn ?sn ?kd :in $ ?sid :where
+                       [?k :kind/name ?kn]
+                       [?k :kind/species ?sid]
+                       [?k :kind/description ?kd]
+                       [?sid :species/name ?sn]] (d/db conn) sid)]
+      (seq (map (partial apply plant/create-kind) kinds))))
 
-          ;; Create transaction for adding description
-          tmp-name-id #db/id[:db.part/user -1337]
-          new-desc [ {:db/id tmp-name-id
-                      :plant.name/family family-id
-                      :plant.name/genus genus-id
-                      :plant.name/species species-id
-                      :plant.name/kind (-> desc :name :kind)}
-                     {:db/id id
-                      :plant.desc/name tmp-name-id}]]
-      ;; Do it
-      (if (contains conn id)
-        (do
-          @(d/transact conn new-desc)
-          true)
-        false)))
-  (delete-plant-desc [_ id]
-    ;; Remove plant.name and family, genus, species without plant?
-    (if (contains conn id)
-      (do
-        @(d/transact conn [[:db.fn/retractEntity id]])
-        true)
-      false)))
+  (add-kind [_ kind]
+    (let [species-id (find-species conn (:species kind))
 
-(defn datomic-plant-description-repo [uri]
-  (->DatomicPlantDescriptionRepo (d/connect uri)))
+          ;; Create a new temp id (add) or get the current id (update).
+          id (or (:id kind) #db/id[:db.part/user -1])
 
+          ;; Create transaction for adding or updating kind.
+          new-kind [{:db/id id
+                     :kind/name (-> kind :name)
+                     :kind/species species-id
+                     :kind/description (-> kind :description)}]
+
+          ;; Perform transaction.
+          tx @(d/transact conn new-kind)]
+
+      ;; Return the kind (with valid id).
+      (if (:id kind)
+        kind
+        (assoc kind :id (d/resolve-tempid (d/db conn) (:tempids tx) id)))))
+
+  (delete-kind [_ id] (delete conn id)))
+
+(defn create-plant-repo [uri]
+  (->DatomicPlantRepo (d/connect uri)))

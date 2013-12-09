@@ -15,24 +15,23 @@
 
 (ns spira.dm.test-model
   (:require [spira.dm.garden :as garden]
-            [spira.dm.plant-desc :as plant-desc]
+            [spira.dm.plant :as plant]
             [spira.dm.seeding :as seeding]
-            [spira.dm.in-memory-repo :as imr]
             [spira.core.util :as util]))
 
 ;; This class creates and populates a small domain model that can be
 ;; used in unit tests.
 
-(defn create-test-repo []
-  (let [g-repo (imr/memory-garden-repo)
-        pd-repo (imr/memory-plant-description-repo)]
-    (-> g-repo (.add-garden (garden/create-garden "Babylon")))
-    (-> g-repo (.add-garden (garden/create-garden "Versailles")))
-    (-> pd-repo (.add-plant-desc (plant-desc/create-plant-desc
-                                  "Apiacea" "Daucus" "Carrot" "Early Nantes")))
-    (-> pd-repo (.add-plant-desc (plant-desc/create-plant-desc
-                                  "Apiacea" "Daucus" "Carrot" "Amsterdam")))
-    (-> pd-repo (.add-plant-desc (plant-desc/create-plant-desc
-                                  "Poaceae" "Zea" "Mays" "Ashworth")))
-    {:garden g-repo
-     :plant-desc pd-repo}))
+;; (defn create-test-repo []
+;;   (let [g-repo (imr/memory-garden-repo)
+;;         pd-repo (imr/memory-plant-description-repo)]
+;;     (-> g-repo (.add-garden (garden/create-garden "Babylon")))
+;;     (-> g-repo (.add-garden (garden/create-garden "Versailles")))
+;;     (-> pd-repo (.add-plant-desc (plant-desc/create-plant-desc
+;;                                   "Apiacea" "Daucus" "Carrot" "Early Nantes")))
+;;     (-> pd-repo (.add-plant-desc (plant-desc/create-plant-desc
+;;                                   "Apiacea" "Daucus" "Carrot" "Amsterdam")))
+;;     (-> pd-repo (.add-plant-desc (plant-desc/create-plant-desc
+;;                                   "Poaceae" "Zea" "Mays" "Ashworth")))
+;;     {:garden g-repo
+;;      :plant-desc pd-repo}))

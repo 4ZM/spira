@@ -4,7 +4,7 @@
 
   <div class="row">
     <div class="h2 col-md-10">
-      {{name.species}}
+      {{species.name}}
     </div>
     <div class="col-md-1">
       <i class="fa fa-tint fa-2x"></i>
@@ -25,27 +25,19 @@
       <hr/>
 
       <div class="row">
-        <div class="col-sm-6 text-right">
+        <div class="col-sm-5 text-right">
           <b>Familj</b>
         </div>
         <div class="col-sm-6">
-          {{name.family}}
+          {{species.family}}
         </div>
       </div>
       <div class="row">
-        <div class="col-sm-6 text-right">
+        <div class="col-sm-5 text-right">
           <b>Släkte</b>
         </div>
         <div class="col-sm-6">
-          {{name.genus}}
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-6 text-right">
-          <b>Art</b>
-        </div>
-        <div class="col-sm-6">
-          {{name.species}}
+          {{species.genus}}
         </div>
       </div>
 
@@ -56,14 +48,7 @@
     <div class="col-sm-9">
       <div class="row" style="margin-left: 5px;">
         <h4>Beskrivning</h4>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-          sed do eiusmod tempor incididunt ut labore et dolore magna
-          aliqua. Ut enimad minim veniam, quis nostrud exercitation
-          ullamco laboris nisi ut aliquip ex ea commodo consequat.
-          Duis aute irure dolor in reprehenderit in voluptate velit
-          esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-          occaecat cupidatat non proident, sunt in culpa qui officia
-          deserunt mollit anim id est laborum.</p>
+        <p>{{species.description}}</p>
       </div>
       <div class="row" style="margin-left: 5px;">
         <h4>Avstånd</h4>

@@ -13,8 +13,8 @@
 ;; You should have received a copy of the GNU Affero General Public License
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-(ns spira.dm.plant-desc-fixture
+(ns spira.dm.plant-fixture
   (:require [clojure.test :refer :all]
-            [spira.dm.plant-desc :refer :all]))
+            [spira.dm.plant :refer :all]))
 
-(def carrot-early-nantes (create-plant-desc "?" "?" "Carrot" "Early Nantes"))
+;; TODO add tests when there is anything to test

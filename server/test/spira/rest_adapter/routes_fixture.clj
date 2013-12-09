@@ -19,7 +19,7 @@
             [spira.core.system :as sys]
             [spira.rest-adapter.util :refer :all]
             [spira.rest-adapter.garden-service :as gs]
-            [spira.rest-adapter.plant-desc-service :as pds]
+            [spira.rest-adapter.plant-service :as ps]
             [spira.rest-adapter.routes :refer :all]))
 
 (defn- test-req [method uri & params]
@@ -32,7 +32,7 @@
     (assoc r :body body)))
 
 (defn- test-state []
-  (sys/->SystemState :gr :pdr))
+  (sys/->SystemState :gr :pr))
 
 (facts "about invalid requests"
   (fact "Invalid routes give error status"
@@ -98,54 +98,54 @@
 
 
 (facts "about list requests"
-  (fact "/api/plantdesc requests list"
-    (let [req (test-req :get "/api/plantdesc")
+  (fact "/api/species requests list"
+    (let [req (test-req :get "/api/species")
           state (test-state)]
       (:status ((app-routes state) req)) => (:ok http-status)
-      (provided (pds/req-plant-desc-list :pdr) => (response :ok []) :times 1))))
+      (provided (ps/req-species :pr) => (response :ok []) :times 1))))
 
 (facts "about plant description get requests"
-  (fact "/api/plantdesc/id gets plant description"
+  (fact "/api/species/id gets plant description"
     (let [state (test-state)]
-      (:status ((app-routes state) (test-req :get "/api/plantdesc/1"))) => (:ok http-status)
-      (provided (pds/req-plant-desc :pdr 1) => (response :ok {}) :times 1)))
-  (fact "/api/plantdesc/id with wrong id reports error"
+      (:status ((app-routes state) (test-req :get "/api/species/1"))) => (:ok http-status)
+      (provided (ps/req-species :pr 1) => (response :ok {}) :times 1)))
+  (fact "/api/species/id with wrong id reports error"
     (let [state (test-state)]
-      (:status ((app-routes state) (test-req :get "/api/plantdesc/1"))) => (:bad-req http-status)
-      (provided (pds/req-plant-desc :pdr 1) => (response :bad-req) :times 1))))
+      (:status ((app-routes state) (test-req :get "/api/species/1"))) => (:bad-req http-status)
+      (provided (ps/req-species :pr 1) => (response :bad-req) :times 1))))
 
 (facts "about plant description create requests"
-  (fact "/api/plantdesc post creates plant description"
-    (let [body {:family "f" :genus "g" :species "s" :kind "k"}
-          req (test-post "/api/plantdesc" body)
+  (fact "/api/species post creates plant description"
+    (let [body {:name "sn" :family "f" :genus "g" :description "d"}
+          req (test-post "/api/species" body)
           state (test-state)]
       (:status ((app-routes state) req)) => (:created http-status)
-      (provided (pds/create-plant-desc :pdr body) =>
+      (provided (ps/create-species :pr body) =>
                 (response :created {:id 1}) :times 1)))
 
-  (fact "/api/plantdesc post bad data gives error"
+  (fact "/api/species post bad data gives error"
     (let [bad-params {:wierd "param"}
-          req (test-post "/api/plantdesc" bad-params)
+          req (test-post "/api/species" bad-params)
           state (test-state)]
       (:status ((app-routes state) req)) => (:bad-req http-status)
-      (provided (pds/create-plant-desc :pdr bad-params) =>
+      (provided (ps/create-species :pr bad-params) =>
                 (response :bad-req) :times 1))))
 
 (facts "about plant description update requests"
-  (fact "/api/plantdesc/id put request updates"
-    (let [params {:family "f" :genus "g" :species "s" :kind "k"}
-          req (test-req :put "/api/plantdesc/1" params)
+  (fact "/api/species/id put request updates"
+    (let [params {:name "sn" :family "f" :genus "g" :description "d"}
+          req (test-req :put "/api/species/1" params)
           state (test-state)]
       (:status ((app-routes state) req)) => (:ok http-status)
-      (provided (pds/update-plant-desc :pdr 1 params) =>
+      (provided (ps/update-species :pr 1 params) =>
                 (response :ok) :times 1))))
 
 (facts "about plant description delete requests"
-  (fact "/api/plantdesc/id delete request deletes"
-    (let [req (test-req :delete "/api/plantdesc/1")
+  (fact "/api/species/id delete request deletes"
+    (let [req (test-req :delete "/api/species/1")
           state (test-state)]
       (:status ((app-routes state) req)) => (:ok http-status)
-      (provided (pds/delete-plant-desc :pdr 1) =>
+      (provided (ps/delete-species :pr 1) =>
                 (response :ok) :times 1))))
 
 
@@ -155,11 +155,10 @@
 
 (facts "about the whole call chain"
   (fact "empty json array on empty garden list request"
-    (let [state (sys/dev-system)
+    (let [state (sys/create-system-state sys/test-uri)
           list-req (test-req :get "/api/garden")
           routes (app-routes state)]
       (routes list-req) =>
       {:status (:ok http-status)
        :headers json-header
-       :body "[]"})
-      ))
+       :body "[]"})))

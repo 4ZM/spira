@@ -37,7 +37,6 @@
 (facts "about a2i"
   (fact "converts string to int"
     (parse-uint "23") => 23
-    (parse-uint "-23") => 23
     (parse-uint "0") => 0
-;;    (parse-uint "X") => throws
-    ))
+    (parse-uint "-23") => nil
+    (parse-uint "X") => nil))

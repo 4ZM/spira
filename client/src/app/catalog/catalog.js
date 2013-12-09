@@ -15,32 +15,21 @@
 
 'use strict';
 
-// Add controller to module
 angular.module('spira.catalog')
-  .controller('CatalogCtrl', ['$scope', '$http', function($scope, $http) {
-    $scope.plantDesc = {};
+  .controller('CatalogCtrl', ['$scope', '$http', '$log', function($scope, $http, $log) {
     $scope.species = {};
     $scope.speciesVisible = {};
 
-    $scope.queryPlantDescs = function() {
-      $http.get('/api/plantdesc')
+    $scope.getSpecies = function() {
+      $http.get('/api/species')
         .success(function (data, status, headers, config) {
-          $scope.plantDesc = data;
-
-          for (var i = 0; i < data.length; ++i) {
-            var s = data[i].species;
-
-            if (!(s in $scope.species))
-              $scope.species[s] = [data[i]];
-            else
-              $scope.species[s].push(data[i]);
-          }
+          $scope.species = data;
         })
         .error(function (data, status, headers, config) {
           throw new Error("Can't get fubar");
         });
     };
 
-    $scope.queryPlantDescs();
+    $scope.getSpecies();
   }]);
 

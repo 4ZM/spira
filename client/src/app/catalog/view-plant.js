@@ -15,25 +15,25 @@
 
 'use strict';
 
-angular.module('spira.catalog.view-plant-desc')
+angular.module('spira.catalog.view-plant')
   .controller(
-    'ViewPlantDescCtrl',
+    'ViewPlantCtrl',
     ['$scope', '$http', '$log', '$routeParams',
      function($scope, $http, $log, $routeParams) {
 
-       $scope.name = {};
+       $scope.species = {};
 
        // Do some sanity check on the param?
        // Call the create api
-       $log.info("ViewPlantDescCtrl");
+       $log.info("ViewPlantCtrl");
        $log.info("route params: " + $routeParams);
        $log.info("route id: " + $routeParams.id);
 
-       var reqUrl = "/api/plantdesc/" + $routeParams.id;
+       var reqUrl = "/api/species/" + $routeParams.id;
 
-       $http.get("/api/plantdesc/" + $routeParams.id).
+       $http.get("/api/species/" + $routeParams.id).
          success(function(response) {
-           $scope.name = response.name;
+           $scope.species = response;
          }).
          error(function(response) {
             throw new Error("Error requesting plant description: " +

@@ -15,7 +15,7 @@
 
 (ns spira.datomic-adapter.data
   (:require [spira.dm.garden :as g]
-            [spira.dm.plant-desc :as p]
+            [spira.dm.plant :as p]
             [spira.dm.seeding :as seeding]
             [spira.core.util :as util]
             [datomic.api :as d]))
@@ -28,38 +28,87 @@
     @(d/transact conn schema-tx))
   nil)
 
-(defn populate-gardens [r]
+(defn populate-gardens! [r]
   (.add-garden r (g/create-garden "Torture"))
   (.add-garden r (g/create-garden "Babylon"))
   )
 
-(defn populate-plant-descriptions [r]
-  (.add-plant-desc r (p/create-plant-desc "Flockblommiga" "Morotssläktet" "Morot" "Autumn King"))
-  (.add-plant-desc r (p/create-plant-desc "Flockblommiga" "Morotssläktet" "Morot" "Amsterdam"))
-  (.add-plant-desc r (p/create-plant-desc "Flockblommiga" "Morotssläktet" "Morot" "London Torg"))
-  (.add-plant-desc r (p/create-plant-desc "Flockblommiga" "Morotssläktet" "Morot" "Early Nantes"))
+(defn populate-plant-repo! [r]
+  (let [s (p/add-species r (p/create-species
+                            "Morot"
+                            "Flockblommiga"
+                            "Morotssläktet"
+                            "Description of morot"))]
+    (p/add-kind r (p/create-kind "Autumn King" (:name s) "Desc of autumn king"))
+    (p/add-kind r (p/create-kind "Amsterdam" (:name s) "Description"))
+    (p/add-kind r (p/create-kind "London Torg" (:name s) "Description"))
+    (p/add-kind r (p/create-kind "Early Nantes" (:name s) "Description")))
 
-  (.add-plant-desc r (p/create-plant-desc "Flockblommiga" "Palsternackssläktet" "Palsternacka" "Student"))
-  (.add-plant-desc r (p/create-plant-desc "Flockblommiga" "Palsternackssläktet" "Palsternacka" "White Gem"))
+  (let [s (p/add-species r (p/create-species
+                            "Palsternacka"
+                            "Flockblommiga"
+                            "Palsternackssläktet"
+                            "Description of P"))]
+    (p/add-kind r (p/create-kind "Student" (:name s) "Description"))
+    (p/add-kind r (p/create-kind "White Gem" (:name s) "Description")))
 
-  (.add-plant-desc r (p/create-plant-desc "Flockblommiga" "Persiljesläktet" "Rotpersilja" "Berliner Halblang"))
+  (let [s (p/add-species r (p/create-species
+                            "Rotpersilja"
+                            "Flockblommiga"
+                            "Persiljesläktet"
+                            "Description"))]
+    (p/add-kind r (p/create-kind "Berliner Halblang" (:name s) "Description")))
 
-  (.add-plant-desc r (p/create-plant-desc "Flockblommiga" "Selleri" "Stjälkselleri" "Tall Utah"))
-  (.add-plant-desc r (p/create-plant-desc "Flockblommiga" "Selleri" "Bladselleri" "Par-Cel"))
-  (.add-plant-desc r (p/create-plant-desc "Flockblommiga" "Selleri" "Bladselleri" "Kintsai"))
-  (.add-plant-desc r (p/create-plant-desc "Flockblommiga" "Selleri" "Bladselleri" "Heung Kunn"))
+  (let [s (p/add-species r (p/create-species
+                            "Stjälkselleri"
+                            "Flockblommiga"
+                            "Selleri"
+                            "Description"))]
+    (p/add-kind r (p/create-kind "Tall Utah" (:name s) "Description")))
 
-  (.add-plant-desc r (p/create-plant-desc "Flockblommiga" "Dillsläktet" "Dill" "Mammuth"))
-  (.add-plant-desc r (p/create-plant-desc "Flockblommiga" "Dillsläktet" "Dill" "Vanlig Dill"))
-  (.add-plant-desc r (p/create-plant-desc "Flockblommiga" "Dillsläktet" "Dill" "Tetra Dill"))
+  (let [s (p/add-species r (p/create-species
+                            "Bladselleri"
+                            "Flockblommiga"
+                            "Selleri"
+                            "Description"))]
+    (p/add-kind r (p/create-kind "Par-Cel" (:name s) "Description"))
+    (p/add-kind r (p/create-kind "Kintsai" (:name s) "Description"))
+    (p/add-kind r (p/create-kind "Heung Kunn" (:name s) "Description")))
 
-  (.add-plant-desc r (p/create-plant-desc "Gräsväxter" "Majssläktet" "Majs" "Double Standard"))
-  (.add-plant-desc r (p/create-plant-desc "Gräsväxter" "Majssläktet" "Majs" "Ashworth"))
-  (.add-plant-desc r (p/create-plant-desc "Gräsväxter" "Majssläktet" "Majs" "Painted Mountain"))
+  (let [s (p/add-species r (p/create-species
+                            "Dill"
+                            "Flockblommiga"
+                            "Dillsläktet"
+                            "Description"))]
+    (p/add-kind r (p/create-kind "Vanlig Dill" (:name s) "Description"))
+    (p/add-kind r (p/create-kind "Tetra Dill" (:name s) "Description")))
 
-  (.add-plant-desc r (p/create-plant-desc "Gurkväxter" "Gurkor" "Gurka" "Northern Pickling"))
-  (.add-plant-desc r (p/create-plant-desc "Gurkväxter" "Gurkor" "Gurka" "Arboga Vit"))
+  (let [s (p/add-species r (p/create-species
+                            "Majs"
+                            "Gräsväxter"
+                            "Majssläktet"
+                            "Description"))]
+    (p/add-kind r (p/create-kind "Double Standard" (:name s) "Description"))
+    (p/add-kind r (p/create-kind "Ashworth" (:name s) "Description"))
+    (p/add-kind r (p/create-kind "Painted Mountain" (:name s) "Description")))
 
-  (.add-plant-desc r (p/create-plant-desc "Korgblommiga" "Kronärtskockssläktet" "Kronärtskocka" "Green Globe"))
-  (.add-plant-desc r (p/create-plant-desc "Korgblommiga" "Kronärtskockssläktet" "Kronärtskocka" "Imperial Star"))
+  (let [s (p/add-species r (p/create-species
+                            "Gurka"
+                            "Gurkväxter"
+                            "Gurkor"
+                            "Description"))]
+    (p/add-kind r (p/create-kind "Arboga Vit" (:name s) "Description"))
+    (p/add-kind r (p/create-kind "Northern Pickling" (:name s) "Description")))
+
+  (let [s (p/add-species r (p/create-species
+                            "Kronärtskocka"
+                            "Korgblommiga"
+                            "Kronärtskockssläktet"
+                            "Description"))]
+    (p/add-kind r (p/create-kind "Green Globe" (:name s) "Description"))
+    (p/add-kind r (p/create-kind "Imperial Star" (:name s) "Description")))
+
+  ;; Return nil - all side effects
+  nil
   )
+

@@ -13,45 +13,39 @@
 ;; You should have received a copy of the GNU Affero General Public License
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-(ns spira.rest-adapter.plant-desc-service-fixture
+(ns spira.rest-adapter.plant-service-fixture
   (:require [midje.sweet :refer :all]
             [spira.core.test-util :refer :all]
-            [spira.dm.plant-desc :as pd]
+            [spira.dm.plant :as p]
             [spira.rest-adapter.util :refer :all]
-            [spira.rest-adapter.plant-desc-service :refer :all]
+            [spira.rest-adapter.plant-service :refer :all]
             ))
 
 (facts "about plant description list requests"
   (fact "plant description list request requests plant descriptions"
-    (req-plant-desc-list :repo) => (response :ok '())
-    (provided (pd/list-descriptions :repo) => '())))
+    (req-species :repo) => (response :ok '())
+    (provided (p/species :repo) => '())))
 
 (facts "about plant description requests"
   (fact "plant description request of non existent description gives :bad-req"
-    (req-plant-desc :repo 23) => (response :bad-req)
-    (provided (pd/get-plant-desc :repo 23) => nil))
+    (req-species :repo 23) => (response :bad-req)
+    (provided (p/species :repo 23) => nil))
   (fact "plant description request of existing description returns it"
-    (req-plant-desc :repo 23) => (response :ok :plant-desc)
-    (provided (pd/get-plant-desc :repo 23) => :plant-desc)))
+    (req-species :repo 23) => (response :ok :plant-desc)
+    (provided (p/species :repo 23) => :plant-desc)))
 
 (facts "about create plant description requests"
   (fact "create request creates a description"
-    (create-plant-desc
-     :repo {:family "f" :genus "g" :species "s" :kind "k"})
+    (create-species :repo {:name "sn" :family "f" :genus "g"})
     => (response :created 23)
-    (provided (pd/add-plant-desc :repo (mapped-eq? #(:kind (:name %)) "k"))
-              => 23)))
+    (provided (p/add-species :repo (mapped-eq? :name "sn")) => 23)))
 
-(facts "about update plant description requests"
-  (fact "update request updates a description"
-    (fact "update with invalid id gives :bad-req"
-      (update-plant-desc :repo 23 {}) => (response :bad-req)
-      (provided (pd/update-plant-desc :repo 23 anything) => false))))
+;; TODO write test for update when semantics become clear
 
 (facts "about delete plant description requests"
   (fact "delete request deletes a description"
-    (delete-plant-desc :repo 23) => (response :ok)
-    (provided (pd/delete-plant-desc :repo 23) => true))
+    (delete-species :repo 23) => (response :ok)
+    (provided (p/delete-species :repo 23) => true))
   (fact "delete request with invalid id"
-    (delete-plant-desc :repo 23) => (response :bad-req)
-    (provided (pd/delete-plant-desc :repo 23) => false)))
+    (delete-species :repo 23) => (response :bad-req)
+    (provided (p/delete-species :repo 23) => false)))

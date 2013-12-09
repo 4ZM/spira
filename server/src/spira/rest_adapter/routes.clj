@@ -16,7 +16,7 @@
 (ns spira.rest-adapter.routes
   (:require [spira.core.util :as util]
             [spira.rest-adapter.garden-service :as gs]
-            [spira.rest-adapter.plant-desc-service :as pds]
+            [spira.rest-adapter.plant-service :as ps]
             [spira.rest-adapter.util :refer :all]
             [compojure.core :refer :all]
             [compojure.route :as route]))
@@ -30,7 +30,7 @@
 ;; PUT       /api/foo/<id>    -> update record
 ;; DELETE    /api/foo/<id>    -> delete record
 
-(defn app-routes [{garden-repo :garden-repo plant-desc-repo :plant-desc-repo}]
+(defn app-routes [{garden-repo :garden-repo plant-repo :plant-repo}]
   (routes
 
    ;; /api/garden
@@ -50,22 +50,22 @@
            (json-response
             (gs/delete-garden garden-repo (util/parse-uint id))))
 
-   ;; /api/plantdesc
-   (GET "/api/plantdesc/:id" [id]
+   ;; /api/species
+   (GET "/api/species/:id" [id]
          (json-response
-          (pds/req-plant-desc plant-desc-repo (util/parse-uint id))))
-   (GET "/api/plantdesc" []
+          (ps/req-species plant-repo (util/parse-uint id))))
+   (GET "/api/species" []
         (json-response
-         (pds/req-plant-desc-list plant-desc-repo)))
-   (POST "/api/plantdesc" {body :body}
+         (ps/req-species plant-repo)))
+   (POST "/api/species" {body :body}
          (json-response
-          (pds/create-plant-desc plant-desc-repo body)))
-   (PUT "/api/plantdesc/:id" [id & params]
+          (ps/create-species plant-repo body)))
+   (PUT "/api/species/:id" [id & params]
         (json-response
-         (pds/update-plant-desc plant-desc-repo (util/parse-uint id) params)))
-   (DELETE "/api/plantdesc/:id" [id]
+         (ps/update-species plant-repo (util/parse-uint id) params)))
+   (DELETE "/api/species/:id" [id]
            (json-response
-            (pds/delete-plant-desc plant-desc-repo (util/parse-uint id))))
+            (ps/delete-species plant-repo (util/parse-uint id))))
 
    ;; fallback
    (route/not-found "Not Found")
