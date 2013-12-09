@@ -22,6 +22,7 @@ angular.module('spira.catalog.view-plant')
      function($scope, $http, $log, $routeParams) {
 
        $scope.species = {};
+       $scope.kinds = {};
 
        // Do some sanity check on the param?
        // Call the create api
@@ -29,15 +30,24 @@ angular.module('spira.catalog.view-plant')
        $log.info("route params: " + $routeParams);
        $log.info("route id: " + $routeParams.id);
 
-       var reqUrl = "/api/species/" + $routeParams.id;
-
        $http.get("/api/species/" + $routeParams.id).
          success(function(response) {
            $scope.species = response;
+
+           $log.info("will now request kinds");
+           $http.get("/api/species/" + $routeParams.id + '/kinds').
+             success(function(response) {
+               $log.info("kind request completed");
+               $scope.kinds = response;
+             }).
+             error(function(response) {
+               throw new Error("Error requesting species kinds: " +
+                               response.status);
+             });
          }).
          error(function(response) {
-            throw new Error("Error requesting plant description: " +
-                            response.status);
+           throw new Error("Error requesting species: " +
+                           response.status);
          });
      }]);
 

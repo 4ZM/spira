@@ -48,3 +48,8 @@
   "Delete species request"
   (let [success (-> repo (p/delete-species id))]
     (response (if success :ok :bad-req))))
+
+(defn req-kinds
+  [repo sid]
+  "Respond to kind list request"
+  (response :ok (p/kinds repo sid)))

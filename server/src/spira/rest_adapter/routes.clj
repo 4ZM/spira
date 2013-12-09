@@ -67,6 +67,11 @@
            (json-response
             (ps/delete-species plant-repo (util/parse-uint id))))
 
+   ;; /kinds
+   (GET "/api/species/:id/kinds" [id]
+        (json-response
+         (ps/req-kinds plant-repo (util/parse-uint id))))
+
    ;; fallback
    (route/not-found "Not Found")
   ))
