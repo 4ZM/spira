@@ -38,13 +38,17 @@ angular.module('spira.catalog.plant-editor')
          $log.info("delete species");
        };
 
-
        $scope.addKind = function() {
          $log.info("add kind");
+         $scope.kinds.push({});
        };
 
        $scope.deleteKind = function(k) {
          $log.info("delete kind");
+         var i = $scope.kinds.indexOf(k);
+         if(i != -1) {
+           $scope.kinds.splice(i, 1);
+         }
        };
 
        $scope.saveKind = function(k) {
@@ -60,6 +64,7 @@ angular.module('spira.catalog.plant-editor')
              success(function(response) {
                $log.info("kind request completed");
                $scope.kinds = response;
+               $log.info($scope.kinds);
              }).
              error(function(response) {
                throw new Error("Error requesting species kinds: " +
