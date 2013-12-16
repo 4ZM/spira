@@ -60,9 +60,9 @@
    (POST "/api/species" {body :body}
          (json-response
           (ps/create-species plant-repo body)))
-   (PUT "/api/species/:id" [id & params]
+   (PUT "/api/species/:id" {body :body}
         (json-response
-         (ps/update-species plant-repo (util/parse-uint id) params)))
+         (ps/update-species plant-repo body)))
    (DELETE "/api/species/:id" [id]
            (json-response
             (ps/delete-species plant-repo (util/parse-uint id))))

@@ -38,7 +38,7 @@ angular.module('spira.catalog.plant-editor')
            return false;
          }
 
-         return ($scope.species.val[field] === undefined) // new item
+         return ($scope.species.orig === undefined) // new item
            || ($scope.species.val[field] !== $scope.species.orig[field]); //changed item
        };
 
@@ -70,6 +70,35 @@ angular.module('spira.catalog.plant-editor')
        $scope.saveSpecies = function() {
          $log.info("save species");
          $log.info($scope.species);
+         if ($scope.species.orig === undefined) {
+           // New species
+           $log.info("create new species");
+
+           $http.post("/api/species", $scope.species.val)
+             .success(function(response) {
+               $log.info('create species successfull');
+               $scope.species.orig = angular.copy($scope.species.val);
+             })
+             .error(function(response) {
+               throw new Error("Error requesting species: " + response.status);
+             });
+
+         }
+         else {
+           // Update existing species
+           $log.info("update existing species " + $scope.species.val);
+
+
+           $http.put("/api/species/" + $routeParams.id, $scope.species.val)
+             .success(function(response) {
+               $log.info('create species successfull');
+               $scope.species.orig = angular.copy($scope.species.val);
+             })
+             .error(function(response) {
+               throw new Error("Error requesting species: " + response.status);
+             });
+
+         }
        };
 
        $scope.deleteSpecies = function() {

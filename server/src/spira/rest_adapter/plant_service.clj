@@ -34,13 +34,13 @@
                                       (:description params))]
     (response :created (p/add-species repo new-species))))
 
-(defn update-species [repo id params]
+(defn update-species [repo params]
   "Update plant desc request"
-  (let [new-species (p/create-species (:id id)
+  (let [new-species (p/create-species (:id params)
                                       (:name params)
                                       (:family params)
                                       (:genus params)
-                                      (:descrption params))]
+                                      (:description params))]
     (p/add-species repo new-species)
     (response :ok)))
 
