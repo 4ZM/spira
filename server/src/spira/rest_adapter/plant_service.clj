@@ -54,6 +54,22 @@
   "Respond to kind list request"
   (response :ok (p/kinds repo sid)))
 
+(defn create-kind [repo params]
+  "Create kind request"
+  (let [new-kind (p/create-kind (:name params)
+                                (:species params)
+                                (:description params))]
+    (response :created (p/add-kind repo new-kind))))
+
+(defn update-kind [repo params]
+  "Update plant kind request"
+  (let [new-kind (p/create-kind (:id params)
+                                (:name params)
+                                (:species params)
+                                (:description params))]
+    (p/add-kind repo new-kind)
+    (response :ok)))
+
 (defn delete-kind [repo id]
   "Delete kind request"
   (let [success (-> repo (p/delete-kind id))]

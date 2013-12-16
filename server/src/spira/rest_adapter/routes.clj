@@ -68,9 +68,15 @@
             (ps/delete-species plant-repo (util/parse-uint id))))
 
    ;; /kinds
-   (GET "/api/species/:id/kinds" [id]
+   (GET "/api/species/:sid/kinds" [sid]
         (json-response
-         (ps/req-kinds plant-repo (util/parse-uint id))))
+         (ps/req-kinds plant-repo (util/parse-uint sid))))
+   (POST "/api/species/:sid/kinds" {body :body}
+         (json-response
+          (ps/create-kind plant-repo body)))
+   (PUT "/api/species/:sid/kinds/:kid" {body :body}
+        (json-response
+         (ps/update-kind plant-repo body)))
    (DELETE "/api/species/:sid/kinds/:kid" [sid kid]
            (json-response
             (ps/delete-kind plant-repo (util/parse-uint kid))))

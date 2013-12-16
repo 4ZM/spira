@@ -77,6 +77,7 @@ angular.module('spira.catalog.plant-editor')
            $http.post("/api/species", $scope.species.val)
              .success(function(response) {
                $log.info('create species successfull');
+               $scope.species.val.id = response.id;
                $scope.species.orig = angular.copy($scope.species.val);
              })
              .error(function(response) {
@@ -141,6 +142,12 @@ angular.module('spira.catalog.plant-editor')
 
        $scope.addKind = function() {
          $log.info("add kind");
+
+         if ($scope.species.orig === undefined) {
+           bootbox.alert("Arten måste sparas innan nya sorter kan läggas till.");
+           return;
+         }
+
          $scope.kinds.push({ val:{} });
        };
 
@@ -189,6 +196,38 @@ angular.module('spira.catalog.plant-editor')
 
        $scope.saveKind = function(k) {
          $log.info("save kind");
+
+         if (k.orig === undefined) {
+           // New species
+           $log.info("create new kind");
+
+           k.val.species = $scope.species.orig.name;
+           $http.post('/api/species/' + $scope.species.val.id + '/kinds', k.val)
+             .success(function(response) {
+               $log.info('create kind successfull');
+               k.val.id = response.id;
+               k.orig = angular.copy(k.val);
+             })
+             .error(function(response) {
+               throw new Error("Error requesting species: " + response.status);
+             });
+
+         }
+         else {
+           // Update existing species
+           $log.info("update existing kind " + k.val);
+
+           k.val.species = $scope.species.orig.name;
+           $http.put('/api/species/' + $scope.species.val.id + '/kinds/' + k.val.id, k.val)
+             .success(function(response) {
+               $log.info('create species successfull');
+               k.orig = angular.copy(k.val);
+             })
+             .error(function(response) {
+               throw new Error("Error requesting species: " + response.status);
+             });
+
+         }
        };
 
        if ($routeParams.id !== undefined) {
