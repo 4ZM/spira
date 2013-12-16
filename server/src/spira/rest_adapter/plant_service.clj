@@ -53,3 +53,8 @@
   [repo sid]
   "Respond to kind list request"
   (response :ok (p/kinds repo sid)))
+
+(defn delete-kind [repo id]
+  "Delete kind request"
+  (let [success (-> repo (p/delete-kind id))]
+    (response (if success :ok :bad-req))))

@@ -117,6 +117,36 @@ angular.module('spira.catalog.plant-editor')
 
        $scope.deleteKind = function(k) {
          $log.info("delete kind");
+
+         if (k.orig !== undefined) {
+           bootbox.dialog({
+             message: 'Är det säkert att du vill ta bort sorten <b>'
+               + k.orig.name + '</b>.',
+             title: "Bekräfta borttagning",
+             buttons: {
+               cancel: {
+                 label: "Avbryt",
+                 className: "btn-default"
+               },
+               deleteKind: {
+                 label: '<i class="fa fa-trash-o fa-lg"></i>&nbsp; Ta bort',
+                 className: 'btn-danger',
+                 callback: function() {
+                   $log.info('delete kind confirmed, calling rest api');
+                   $http.delete("/api/species/" + $routeParams.id + '/kinds/' + k.orig.id)
+                     .success(function(response) {
+                       $log.info('delete successfull');
+                     })
+                     .error(function(response) {
+                       throw new Error("Error requesting species: " +
+                                       response.status);
+                     });
+                 }
+               }
+             }
+           });
+         }
+
          var i = $scope.kinds.indexOf(k);
          if(i != -1) {
            $scope.kinds.splice(i, 1);
