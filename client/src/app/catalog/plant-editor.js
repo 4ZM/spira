@@ -21,8 +21,39 @@ angular.module('spira.catalog.plant-editor')
     ['$scope', '$http', '$log', '$routeParams',
      function($scope, $http, $log, $routeParams) {
 
-       $scope.species = {};
-       $scope.kinds = {};
+       $scope.species = { val:{}, orig:{} };
+       $scope.kinds = [];
+
+       // Check if a property is modified.
+       // without args, checks if any of the properties is modified.
+       $scope.speciesModified = function speciesModified(field) {
+         $log.info('Evaluating speciesModified');
+
+         if (field === undefined) {
+           var speciesFieldNames = ['name', 'family', 'genus', 'description'];
+           for (var i = 0; i < speciesFieldNames.length; ++i) {
+             if (speciesModified(speciesFieldNames[i]))
+               return true;
+           }
+           return false;
+         }
+
+         return $scope.species.val[field] !== $scope.species.orig[field];
+       };
+
+       $scope.kindModified = function kindModified(kind, field) {
+         if (field === undefined) {
+           var kindFieldNames = ['name', 'description'];
+           for (var i = 0; i < kindFieldNames.length; ++i) {
+             if (kindModified(kind, kindFieldNames[i]))
+               return true;
+           }
+           return false;
+         }
+
+         return (kind.orig === undefined) // new item
+           || (kind.val[field] !== kind.orig[field]); // changed item
+       };
 
        $log.info("PlantEditorCtrl");
 
@@ -30,8 +61,14 @@ angular.module('spira.catalog.plant-editor')
        $log.info("route id: " + $routeParams.id);
 
 
+       $scope.resetSpecies = function() {
+         $log.info("reset species");
+         $scope.species.val = angular.copy($scope.species.orig);
+       };
+
        $scope.saveSpecies = function() {
          $log.info("save species");
+         $log.info($scope.species);
        };
 
        $scope.deleteSpecies = function() {
@@ -40,7 +77,7 @@ angular.module('spira.catalog.plant-editor')
 
        $scope.addKind = function() {
          $log.info("add kind");
-         $scope.kinds.push({});
+         $scope.kinds.push({ val:{} });
        };
 
        $scope.deleteKind = function(k) {
@@ -51,19 +88,33 @@ angular.module('spira.catalog.plant-editor')
          }
        };
 
+       $scope.resetKind = function(k) {
+         $log.info("reset kind");
+         k.val = angular.copy(k.orig);
+       };
+
        $scope.saveKind = function(k) {
          $log.info("save kind");
        };
 
        $http.get("/api/species/" + $routeParams.id).
          success(function(response) {
-           $scope.species = response;
+           $scope.species.orig = response;
+           $scope.species.val = angular.copy(response);
+
+           $log.info("species req successfull");
+           $log.info(response);
 
            $log.info("will now request kinds");
            $http.get("/api/species/" + $routeParams.id + '/kinds').
              success(function(response) {
                $log.info("kind request completed");
-               $scope.kinds = response;
+
+               for (var i = 0; i < response.length; ++i) {
+                 var k = response[i];
+                 $scope.kinds.push( { val:k, orig:angular.copy(k) } );
+               }
+
                $log.info($scope.kinds);
              }).
              error(function(response) {
