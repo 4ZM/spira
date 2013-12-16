@@ -18,10 +18,10 @@
 angular.module('spira.catalog.plant-editor')
   .controller(
     'PlantEditorCtrl',
-    ['$scope', '$http', '$log', '$routeParams',
-     function($scope, $http, $log, $routeParams) {
+    ['$scope', '$http', '$log', '$routeParams', '$location',
+     function($scope, $http, $log, $routeParams, $location) {
 
-       $scope.species = { val:{}, orig:{} };
+       $scope.species = { val:{} };
        $scope.kinds = [];
 
        // Check if a property is modified.
@@ -38,7 +38,8 @@ angular.module('spira.catalog.plant-editor')
            return false;
          }
 
-         return $scope.species.val[field] !== $scope.species.orig[field];
+         return ($scope.species.val[field] === undefined) // new item
+           || ($scope.species.val[field] !== $scope.species.orig[field]); //changed item
        };
 
        $scope.kindModified = function kindModified(kind, field) {
@@ -73,6 +74,40 @@ angular.module('spira.catalog.plant-editor')
 
        $scope.deleteSpecies = function() {
          $log.info("delete species");
+
+         if ($scope.species.orig === undefined) {
+           $location.path('/catalog');
+           return;
+         }
+
+         bootbox.dialog({
+           message: 'Är det säkert att du vill ta bort arten <b>'
+             + $scope.species.orig.name
+             + '</b> och alla sorter knutna till den?',
+           title: "Bekräfta borttagning",
+           buttons: {
+             cancel: {
+               label: "Avbryt",
+               className: "btn-default"
+             },
+             deleteSpecies: {
+               label: '<i class="fa fa-trash-o fa-lg"></i>&nbsp; Ta bort',
+               className: 'btn-danger',
+               callback: function() {
+                 $log.info('delete confirmed, calling rest api');
+                 $http.delete("/api/species/" + $routeParams.id)
+                   .success(function(response) {
+                     $log.info('delete successfull');
+                     $location.path('/catalog');
+                   })
+                   .error(function(response) {
+                     throw new Error("Error requesting species: " +
+                                     response.status);
+                   });
+               }
+             }
+           }
+         });
        };
 
        $scope.addKind = function() {
@@ -97,34 +132,36 @@ angular.module('spira.catalog.plant-editor')
          $log.info("save kind");
        };
 
-       $http.get("/api/species/" + $routeParams.id).
-         success(function(response) {
-           $scope.species.orig = response;
-           $scope.species.val = angular.copy(response);
+       if ($routeParams.id !== undefined) {
+         $http.get("/api/species/" + $routeParams.id).
+           success(function(response) {
+             $scope.species.orig = response;
+             $scope.species.val = angular.copy(response);
 
-           $log.info("species req successfull");
-           $log.info(response);
+             $log.info("species req successfull");
+             $log.info(response);
 
-           $log.info("will now request kinds");
-           $http.get("/api/species/" + $routeParams.id + '/kinds').
-             success(function(response) {
-               $log.info("kind request completed");
+             $log.info("will now request kinds");
+             $http.get("/api/species/" + $routeParams.id + '/kinds').
+               success(function(response) {
+                 $log.info("kind request completed");
 
-               for (var i = 0; i < response.length; ++i) {
-                 var k = response[i];
-                 $scope.kinds.push( { val:k, orig:angular.copy(k) } );
-               }
+                 for (var i = 0; i < response.length; ++i) {
+                   var k = response[i];
+                   $scope.kinds.push( { val:k, orig:angular.copy(k) } );
+                 }
 
-               $log.info($scope.kinds);
-             }).
-             error(function(response) {
-               throw new Error("Error requesting species kinds: " +
-                               response.status);
-             });
-         }).
-         error(function(response) {
-           throw new Error("Error requesting species: " +
-                           response.status);
-         });
+                 $log.info($scope.kinds);
+               }).
+               error(function(response) {
+                 throw new Error("Error requesting species kinds: " +
+                                 response.status);
+               });
+           }).
+           error(function(response) {
+             throw new Error("Error requesting species: " +
+                             response.status);
+           });
+       }
      }]);
 

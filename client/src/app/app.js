@@ -37,6 +37,9 @@ angular.module('spira', ['ngRoute',
     $routeProvider.when('/catalog/:id',
                         {templateUrl: 'app/catalog/view-plant.tpl.html',
                          controller: 'ViewPlantCtrl'});
+    $routeProvider.when('/plant-editor',
+                        {templateUrl: 'app/catalog/plant-editor.tpl.html',
+                         controller: 'PlantEditorCtrl'});
     $routeProvider.when('/plant-editor/:id',
                         {templateUrl: 'app/catalog/plant-editor.tpl.html',
                          controller: 'PlantEditorCtrl'});
