@@ -46,5 +46,18 @@ angular.module('spira', ['ngRoute',
     $routeProvider.when('/planner',
                         {templateUrl: 'app/planner/planner.tpl.html',
                          controller: 'PlannerCtrl'});
+
+    // "static" pages
+    $routeProvider.when('/about',
+                        {templateUrl: 'app/home/about.tpl.html'});
+    $routeProvider.when('/contact',
+                        {templateUrl: 'app/home/contact.tpl.html'});
+    $routeProvider.when('/license',
+                        {templateUrl: 'app/home/license.tpl.html'});
+    $routeProvider.when('/english',
+                        {templateUrl: 'app/home/english.tpl.html'});
+
+
+    // Default to home screen
     $routeProvider.otherwise({redirectTo: '/home'});
   }]);
